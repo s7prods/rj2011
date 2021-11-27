@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="utf-8" />
+    <title>“黄金铁三角”验证页面</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="../../../res/preload.js"></script>
+    <script src="../../../res/jq3.6.0.js"></script>
+    <script src="../../../res/jqueryui-1.13.0/jquery-ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../../res/preload.css">
+    <link rel="stylesheet" type="text/css" href="../../../res/jqueryui-1.13.0/jquery-ui.min.css">
+</head>
+
+<body>
+    
+    <main>
+        <h1>“黄金铁三角”验证页面</h1>
+        <h2>确保你是“黄金铁三角”的一员再继续！</h2>
+        <button class="disp-block tali-c" onclick="questions.hidden=0;this.style.display='none'">
+            I promise I'm a member of "the Golden Iron Triangle" and continue</button>
+        <div id=questions hidden><br /><ol>
+
+            <div class="f-smaller color-ccc">注意: 所有人名都请写缩写,大写,否则无法通过!</div>
+            <li>中国的十八座山和四四三三，<input size=4>给你们30秒时间</li>
+            <li><select><option value=A>Melody</option><option value=B>石原</option>
+                <option value=C>LZL</option><option value=D>CC</option>
+                </select>玩电脑十年了，都不知道游戏是什么</li>
+            <li>鸟的前肢变成<input size=2 maxlength=1></li>
+            <li>你抖抖抖抖抖抖一节课了，在<input size=6>是吧?</li>
+            <li>Who's 2011's wuli teacher?<input size=3 maxlength=3></li>
+            <li>Melody真名<input size=6 maxlength=3>, 原名<input size=3>,
+                好朋友是<input size=4>, 男朋友是<input size=4 maxlength=2></li>
+            <li>妈老师是?<input size=3 maxlength=3></li>
+            <li>八上年间wude有<input size=1 type=number min=0 max=9>位实习er?</li>
+            <li>八上年间数学有<input size=1 type=number min=0 max=9>位见习er?</li>
+            <li>小阳老师真名<input size=3 maxlength=3>, one of sayings: 
+                <input size=8 maxlength=4>都在赶课; 它把全班分为
+                <input size=1 type=number min=1 max=9>组</li>
+            <li>高雅班是<input size=4 type=number min=2001 max=2023>班,
+                <input type="checkbox" checked>可以打扰tm学习; 班主任是<input size=4></li>
+            <li class=tali-c>学霸题：数正方体<br>
+                 图中共有<input size=2 type=number min=0 max=14>个正方体?</li>
+            
+            </ol><button id=CheckAnswer>Check Answer</button>
+            <div id=result></div>
+        </div>
+    </main>
+
+    <script>
+        window.player = -1; /*
+            -1 -> Error
+            0  -> Juice
+            1  -> Loser
+            2  -> Mia
+        */
+        if(location.hash=='#J'||location.hash=='J') player=0;
+        if(location.hash=='#L'||location.hash=='L') player=1;
+        if(location.hash=='#M'||location.hash=='M') player=2;
+        if(player==-1) location.href='../../../';
+
+        function redo(){
+            location.reload(1);
+        }
+        function bypass(){
+            Data_2011_.
+        }
+
+        CheckAnswer.onclick = function () {
+            var v=function(el){return el.value};
+            var sum = 100, inputs = document.querySelectorAll('main input'), 
+                select0 = document.querySelectorAll('main select')[0];
+            var sumtm = inputs.length + 1, errtm = 0;
+
+            if(select0.value != 'C') errtm++;
+            if (v(inputs[0]) != '小阳老师') errtm++;
+            if (v(inputs[1]) != '胸') errtm++;
+            if (v(inputs[2]) != '拍抖音') errtm++;
+            if (v(inputs[3]) != 'zme') errtm++;
+            if (v(inputs[4]) != 'TSL') errtm++;
+            if (v(inputs[5]).toUpperCase() != 'AMY') errtm++;
+            if (v(inputs[6]).toUpperCase() != 'TINA') errtm++;
+            if (v(inputs[7]) != '军官') errtm++;
+            if (v(inputs[8]) != 'WHJ') errtm++;
+            if (v(inputs[9]) != 2) errtm++;
+            if (v(inputs[10]) != 1) errtm++;
+            if (v(inputs[11]) != 'YJH') errtm++;
+            if (v(inputs[12]) != '四大名校') errtm++;
+            if (v(inputs[13]) != 7) errtm++;
+            if (v(inputs[14]) != 2010) errtm++;
+            if (inputs[15].checked) errtm++;
+            if (v(inputs[16]) != 'PC') errtm++;
+            if (v(inputs[17]) != 14) errtm++;
+
+            sum = (sumtm - errtm) / sumtm * 100;
+            result.innerHTML = `共${sumtm}题,答对${sumtm-errtm}题,答错${errtm}题,得分${sum}`;
+            if(sum>=80){
+                result.innerHTML += '<br><span style="color:green">得分过80,验证成功!</span>'+
+                    " <a href=\"javascript:bypass()\">完成验证</a>";
+            } else {
+                result.innerHTML += '<br><span style="color:red">得分少于80,验证失败!</span>';
+            }
+        }
+    </script>
+    
+</body>
+
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+
+<head>
+    <meta charset="utf-8" />
+    <title>User Authorization Service - 2011</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="../../../res/preload.js"></script>
+    <script src="../../../res/jq3.6.0.js"></script>
+    <script src="../../../res/jqueryui-1.13.0/jquery-ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../../res/preload.css">
+    <link rel="stylesheet" type="text/css" href="../../../res/jqueryui-1.13.0/jquery-ui.min.css">
+    <style>
+        body {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main>
+        Please wait...
+        <div id=LoginUi data-lang=zh_CN hidden>
+            <div>抱歉，但我们必须确定您是2011的成员。</div>
+            <div class="f-smaller color-ccc">Are you not a chinese? This page is just a
+                personal blog (private), so please close this page now.</div>
+            <br /><br />
+            <label class=disp-flex for=LoginUi_username>
+                <span style="flex: auto;">在此输入您的姓名缩写(或别名): </span>
+                <input placeholder="中国的十八座山和四四三三，小阳老师给你们30秒时间"
+                     id=LoginUi_username name=LoginUi_username
+                    autocomplete=no style="flex:100" />
+                <button id=LoginUi_submit_short disabled>验证</button>
+            </label>
+            <br />
+            <div class=f-smaller>
+                <span class="disp-block color-ccc">或在下面选择一个用户:</span>
+                <blockquote data-select-user>正在努力加载数据，请稍候...</blockquote>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        (function () {
+            if (!(Data_2011_.CurrentUser && Data_2011_.CurrentUser.isLogin)) {
+                document.title = '[登录] - ' + document.title;
+                LoginUi_username.oninput = function () {
+                    this.value = this.value.toUpperCase();
+                }
+                LoginUi_username.onkeydown = function (e) {
+                    if(e.keyCode == 13) LoginUi_submit_short.click();
+                }
+                LoginUi_submit_short.onclick = function(){
+                    this.disabled = true;
+                    this.innerHTML = "正在验证...";
+                    var val = LoginUi_username.value;
+                    new Promise(function (resolve, reject) {
+                        let i = 0, l = 0;
+                        for (let k in __users.users) {
+                            l = __users.users[k].name_loginable.length;
+                            for (i = 0; i < l; ++i) {
+                                if (val == __users.users[k].name_loginable[i])
+                                    resolve(k);
+                            }
+                        }
+                        reject("找不到指定的用户。请检查拼写是否正确，然后再试。<br>"+
+                        "若此问题仍出现，请联系<i>Delomy</i> (QQ:1022655575) 。");
+                    }).then(function (v) {
+                        let e = document.createElement('div');
+                        e.innerHTML = "<b class=f-bigger>还差一步!</b><br>"+
+                        "您当前输入的信息还不足以验证您的身份。<br>"+
+                        "点击[继续]以验证身份并登录,<br>或点击[取消]以取消。";
+                        document.body.appendChild(e);
+                        $(function(){
+                            $(e).dialog({
+                                title: "还差一步",
+                                modal: true,
+                                buttons: {
+                                    "继续": function(){
+                                        location.href = __users_redirect[v];
+                                    },
+                                    "取消": function(){
+                                        $(this).dialog("close");
+                                    }
+                                },
+                                close: function(){
+                                    $(this).dialog("destroy");
+                                    LoginUi_submit_short.disabled = false;
+                                    LoginUi_submit_short.innerHTML = '验证';
+                                    e.remove();
+                                }
+                            })
+                        });
+                    }, function (er) {
+                        let e = document.createElement('div');
+                        e.innerHTML = er;
+                        document.body.appendChild(e);
+                        $(function(){
+                            $(e).dialog({
+                                title: "验证失败",
+                                modal: true,
+                                buttons: {
+                                    "关闭": function(){
+                                        $(this).dialog("close");
+                                    }
+                                },
+                                close: function(){
+                                    $(this).dialog("destroy");
+                                    LoginUi_submit_short.disabled = false;
+                                    LoginUi_submit_short.innerHTML = '验证';
+                                    e.remove();
+                                }
+                            })
+                        });
+                    });
+                }
+                $(function(){
+                    $('#LoginUi').dialog({
+                        title: document.title,
+                        modal: true,
+                        closeOnEscape: false,
+                        show: true,
+                        width: document.body.clientWidth - 10,
+                        height: document.body.clientHeight - 2,
+                        x: 0, y: 0,
+                        open: function (event, ui) {
+                            $(".ui-dialog-titlebar-close", $(this).parent()).hide();
+                            LoginUi_submit_short.disabled = true;
+                        },
+                        beforeclose: function(){return false},
+                        buttons: {
+                            '取消': function () {
+                                AbortAndDisablePage();
+                            }
+                        }
+                    });
+                });
+                LoginUi_submit_short.disabled = true;
+                fetch('../Data/users.json').then(
+                    v=>{return v.json()},e=>UserReportFetchError('无法加载数据: '+e,1)
+                ).then(function(v){
+                    window.__users = v;
+                    fetch('../Data/UsersVerifyPageRedirect.json').then(v=>{return v.json()},
+                        e=>UserReportFetchError('无法加载数据: '+e,1)).then(v=>{
+                        window.__users_redirect = v;
+                        LoginUi_submit_short.disabled = false;
+                        fetch('../Data/usersShowInSelect.json').then(v=>{return v.json()},
+                            e=>UserReportFetchError('无法加载数据: '+e)).then(function(v){
+                            let _l = v.length;
+                            let _p = LoginUi.querySelector('[data-select-user]');
+                            if (!_p) return false;
+                            _p.innerHTML = '';
+                            for (let i=0;i<_l;++i) {
+                                let el = document.createElement('a');
+                                el.style.display = "block";
+                                el.innerHTML = __users.users[v[i]].display_name;
+                                el.onclick = function () {
+                                    location.href = __users_redirect[v[i]];
+                                }
+                                _p.appendChild(el);
+                            }
+                        });
+                    });
+                });
+                return;
+            };
+        })()
+    </script>
+</body>
+
+</html>

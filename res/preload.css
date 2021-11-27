@@ -1,6 +1,6 @@
-*{}
+*{/**/}
 *[disabled]{
-    color: #cccccc;
+    cursor: not-allowed !important;
 }
 a, button {
     cursor: pointer;
@@ -11,4 +11,45 @@ a {
 }
 a:hover {
     text-decoration: underline;
+}
+
+/* Predefs for pages */
+.f-bigger {
+    font-size: larger;
+}
+.f-smaller {
+    font-size: smaller;
+}
+.color-ccc {
+    color: #cccccc;
+}
+.color-red {
+    color:red;
+}
+.border-f {
+    border: 1px solid;
+}
+.border-f.border-ccc {
+    border: 1px solid #ccc;
+}
+.disp-block {
+    display: block;
+}
+.disp-iblock {
+    display: inline-block;
+}
+.disp-inline {
+    display: inline;
+}
+.disp-flex {
+    display: flex;
+}
+.tali-l {
+    text-align: left;
+}
+.tali-c {
+    text-align: center;
+}
+.tali-r {
+    text-align: right;
 }

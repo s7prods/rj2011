@@ -1,0 +1,29 @@
+{
+    "users": {
+        "3b70af14-377d-456a-afcc-1c9f8e41e633": {
+            "display_name": "[学神]XCY",
+            "name_loginable": ["XCY","向神","学神"],
+            "password": null
+        },
+        "972a2fc5-e8a7-468e-8318-0e69d6b34675": {
+            "display_name": "Loser",
+            "name_loginable": ["LOSER","律师","绿尸","LISE"],
+            "password": null
+        },
+        "8aa99e92-2450-4e58-8b12-3df44d3f9b86": {
+            "display_name": "Juice",
+            "name_loginable": ["JUICE","郑温","ZXX","张旭西"],
+            "password": null
+        },
+        "165d077c-5cc8-4d96-b12a-c7260d999a12": {
+            "display_name": "Mia",
+            "name_loginable": ["MIA","TWN","天王男","王南"],
+            "password": null
+        },
+        "a27ac0ab-bb21-459a-a3eb-df5b34e74325": {
+            "display_name": "彭青丽老师",
+            "name_loginable": ["PQL"],
+            "password": null
+        }
+    }
+}
