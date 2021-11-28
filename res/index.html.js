@@ -33,6 +33,7 @@
                 _url = hash.substr(15);
                 document.querySelector('nav').hidden = true;
                 document.querySelector('footer').hidden = true;
+                hash = '/view/' + (hash.substr(14))
             }
             
             main.querySelector('#main_status_bar [data-status_loading]').hidden = false;
