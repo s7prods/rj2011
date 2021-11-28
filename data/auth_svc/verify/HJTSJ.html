@@ -63,7 +63,23 @@
             location.reload(1);
         }
         function bypass(){
-            //Data_2011_.
+            Data_2011_.CurrentUser = { id: '', isLogin: true };
+            switch(player){
+                case 0:
+                    Data_2011_.CurrentUser.id = '8aa99e92-2450-4e58-8b12-3df44d3f9b86';
+                    break;
+                case 1:
+                    Data_2011_.CurrentUser.id = '972a2fc5-e8a7-468e-8318-0e69d6b34675';
+                    break;
+                case 2:
+                    Data_2011_.CurrentUser.id = '165d077c-5cc8-4d96-b12a-c7260d999a12';
+                    break;
+                default:
+                    alert('数据异常，请刷新页面重新开始！');
+                    return;
+            };
+            localStorage.data_rj2011 = JSON.stringify(Data_2011_);
+            location.href = '../../../';
         }
 
         CheckAnswer.onclick = function () {

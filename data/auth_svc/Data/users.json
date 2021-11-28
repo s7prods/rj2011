@@ -1,29 +1,106 @@
 {
     "users": {
         "3b70af14-377d-456a-afcc-1c9f8e41e633": {
+            "uid": 2556,
             "display_name": "[学神]XCY",
             "name_loginable": ["XCY","向神","学神"],
-            "password": null
-        },
-        "972a2fc5-e8a7-468e-8318-0e69d6b34675": {
-            "display_name": "Loser",
-            "name_loginable": ["LOSER","律师","绿尸","LISE"],
-            "password": null
+            "password": null,
+            "token": [],
+            "groups": [3139]
         },
         "8aa99e92-2450-4e58-8b12-3df44d3f9b86": {
+            "uid": 3533,
             "display_name": "Juice",
             "name_loginable": ["JUICE","郑温","ZXX","张旭西"],
-            "password": null
+            "password": null,
+            "token": [],
+            "groups": [3139,3089]
+        },
+        "972a2fc5-e8a7-468e-8318-0e69d6b34675": {
+            "uid": 2525,
+            "display_name": "Loser",
+            "name_loginable": ["LOSER","律师","绿尸","LISE"],
+            "password": null,
+            "token": [],
+            "groups": [3139,3089]
         },
         "165d077c-5cc8-4d96-b12a-c7260d999a12": {
+            "uid": 2101,
             "display_name": "Mia",
             "name_loginable": ["MIA","TWN","天王男","王南"],
-            "password": null
+            "password": null,
+            "token": [],
+            "groups": [3139,3089]
         },
         "a27ac0ab-bb21-459a-a3eb-df5b34e74325": {
+            "uid": 3011,
             "display_name": "彭青丽老师",
             "name_loginable": ["PQL"],
-            "password": null
+            "password": null,
+            "token": [],
+            "groups": [2387]
+        },
+        "7e41b9df-06a8-4121-8597-4b411c316a8a": {
+            "uid": 3997,
+            "display_name": "[实习]王诗洋老师",
+            "name_loginable": ["WSY","王诗洋"],
+            "password": null,
+            "token": [],
+            "groups": [2387,2772]
+        },
+        "9e29601c-3201-49f9-a7ad-ac2f36da0a36": {
+            "uid": 2836,
+            "display_name": "[实习]周恒琪老师",
+            "name_loginable": ["ZHQ","周恒琪","安静","俺静","安静老师","俺静老师"],
+            "password": null,
+            "token": [],
+            "groups": [2387,2772]
+        },
+        "00000000-0000-0000-0000-000000000000": {
+            "uid": 0,
+            "display_name": "root",
+            "name_loginable": [],
+            "password": "root",
+            "token": ["highestAccessToken"],
+            "groups": [0,2049]
+        },
+        "f0cc97a1-d11d-4953-9fef-d59de4cfdb91": {
+            "uid": 3326,
+            "display_name": "Delomy",
+            "name_loginable": ["DELOMY"],
+            "password": "DelomySiteAdmin_d59de4cfdb91",
+            "token": [],
+            "groups": [2049]
+        }
+    },
+    "groups": {
+        "00000000-0000-0000-0000-000000000000": {
+            "gid": 0,
+            "display_name": "root"
+        },
+        "4104dc11-eec3-4d37-9262-b545ca69b47e": {
+            "gid": 2049,
+            "display_name": "管理员"
+        },
+        "fdf79ba9-b171-44c7-81b0-be52eda89c00": {
+            "gid": 3139,
+            "display_name": "学生"
+        },
+        "a6fef17a-193f-47b1-82ac-4818ec6a3478": {
+            "gid": 3089,
+            "display_name": "黄金铁三角"
+        },
+        "0ba3f575-b28a-4504-a1a1-1a83ee1cf756": {
+            "gid": 3319,
+            "display_name": "访客"
+        },
+        "69f0b9a5-d46f-4ed2-b66d-55fe05bc6292": {
+            "gid": 2387,
+            "display_name": "教师"
+        },
+        "4772a16e-b404-432c-9daa-0c213eec5ca1": {
+            "gid": 2772,
+            "display_name": "实习teacher"
         }
     }
 }
