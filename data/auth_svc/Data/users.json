@@ -51,7 +51,7 @@
         "a27ac0ab-bb21-459a-a3eb-df5b34e74325": {
             "uid": 3006,
             "display_name": "彭青丽老师",
-            "name_loginable": ["PQL"],
+            "name_loginable": ["PQL","LILY"],
             "password": null,
             "token": [],
             "groups": [3004,3003]
@@ -71,6 +71,14 @@
             "password": null,
             "token": [],
             "groups": [3004,3005]
+        },
+        "7f8d7d52-1cbd-465d-80d2-f45879f93b06": {
+            "uid": 3009,
+            "display_name": "Melody",
+            "name_loginable": ["TSL","MELODY","AMY","田世林"],
+            "password": null,
+            "token": [],
+            "groups": [3004]
         }
     },
     "groups": {

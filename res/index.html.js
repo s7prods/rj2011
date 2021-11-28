@@ -84,6 +84,14 @@
         delete _tmp1;
         document.querySelector('nav span a[title="My"]').innerText =
             __users.users[Data_2011_.CurrentUser.id].display_name;
+        let _el = document.createElement('style');
+        let u = String(__users.users[Data_2011_.CurrentUser.id].uid);
+        _el.innerHTML = `.u__hidrule-h,.u__hidrule-h-tips{display:none;}\n` +
+            `.u__hidrule-h-tips::after{display:inline-block;content:"[拒绝访问。]";` +
+            `color:red}\n*.u_${u}_hidrule-h,*.u_${u}_hidrule-h-tips{display:none !im` +
+            `portant;}\n.u_${u}_hidrule-h-tips::after{display:inline-block;content:"` +
+            `[拒绝访问。]";color:red}\n*.u_${u}_hidrule-s{display:inline-block;}`
+        document.head.appendChild(_el);
     }
     if (window.__users_loading_waiter) __users_loading_waiter.then(_tmp1)
     else _tmp1();

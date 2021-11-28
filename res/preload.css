@@ -6,8 +6,10 @@ a, button {
     cursor: pointer;
 }
 a {
-    color: blue;
     text-decoration: none;
+}
+a[href] {
+    color: blue;
 }
 a:hover {
     text-decoration: underline;
@@ -52,4 +54,25 @@ a:hover {
 }
 .tali-r {
     text-align: right;
+}
+
+*.comment {
+    display: inline;
+    position: relative;
+    top: -0.5em;
+    color: blue;
+    font-size: smaller;
+    text-decoration: none;
+}
+*.comment:hover {
+    text-decoration: underline;
+}
+*.comment:hover::after {
+    --comment-background-color: #b8e932;
+    content: attr(data-content);
+    position: fixed;
+    z-index: 3;
+    border: 1px solid #606060;
+    background-color: var(--comment-background-color);
+    padding: 10px;
 }
