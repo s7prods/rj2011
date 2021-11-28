@@ -1,9 +1,10 @@
 (function (_w, _n) {
+    'use strict';
     var _modules = {};
     _w.__define_module = function (ModuleName, fn) {
         if (typeof fn != 'function')
             throw new TypeError(`Cannot define a non-function module`);
-        _modulewrapper = function (_0, _1) {
+        let _modulewrapper = function (_0, _1) {
             return _0;
         };
         if (_modules[ModuleName]) {
@@ -22,8 +23,9 @@
     _w.__delete_module = function (ModuleName) {
         return delete _modules[ModuleName];
     }
-})(window.self, 'com.module.ModuleInit.__initial__');
+})(window.self, 'com.module.ModuleManager.ModuleInit.__initial__');
 (function (__ClassName__) {
+    'use strict';
     
     // Base Data Read Module
     __run_module(__define_module('BaseDataReader', function () {
@@ -117,5 +119,26 @@
             });
         }
     })); __delete_module('ErrorReporter');
+
+    // User Information Loader
+    __run_module(__define_module('UserInfoReader', function () {
+        let _url = location.href;
+        _url = _url.substr(_url.indexOf("//") + 2);
+        _url = _url.substr(_url.indexOf("/") + 1);
+        _url = _url.substr(_url.indexOf("rj2011") + 7);
+        let _count_of_lastpath = 0, _s = '';
+        if (_url.indexOf('#') + 1) _url = _url.substr(0, _url.indexOf('#'));
+        if (_url.indexOf('/') + 1) {
+            _count_of_lastpath = _url.split('/').length - 1;
+        }
+        for (let i = 0; i < _count_of_lastpath; ++i) _s += '../';
+
+        window.__users_loading_waiter = fetch(_s + 'data/auth_svc/Data/users.json').then(
+            v => { return v.json() }, e => UserReportFetchError('无法加载数据: ' + e, 1)
+        ).then(function (v) {
+            delete window.__users_loading_waiter;
+            window.__users = v;
+        });
+    })); __delete_module('UserInfoReader');
     
 })('com.js.ext.JavaScriptWrapper.main');

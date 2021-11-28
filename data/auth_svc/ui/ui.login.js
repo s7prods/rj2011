@@ -1,4 +1,4 @@
-(function () {
+window._tmp0 = (function () {
     function LastStepUserLogin(v) {
         if (__users.users[v].password) {
             let e = document.createElement('div');
@@ -153,32 +153,52 @@
             });
         });
         LoginUi_submit_short.disabled = true;
-        fetch('../Data/users.json').then(
-            v => { return v.json() }, e => UserReportFetchError('无法加载数据: ' + e, 1)
-        ).then(function (v) {
-            window.__users = v;
-            fetch('../Data/UsersVerifyPageRedirect.json').then(v => { return v.json() },
-                e => UserReportFetchError('无法加载数据: ' + e, 1)).then(v => {
-                    window.__users_redirect = v;
-                    LoginUi_submit_short.disabled = false;
-                    fetch('../Data/usersShowInSelect.json').then(v => { return v.json() },
-                        e => UserReportFetchError('无法加载数据: ' + e)).then(function (v) {
-                            let _l = v.length;
-                            let _p = LoginUi.querySelector('[data-select-user]');
-                            if (!_p) return false;
-                            _p.innerHTML = '';
-                            for (let i = 0; i < _l; ++i) {
-                                let el = document.createElement('a');
-                                el.style.display = "block";
-                                el.innerHTML = __users.users[v[i]].display_name;
-                                el.onclick = function () {
-                                    LastStepUserLogin([v[i]]);
-                                }
-                                _p.appendChild(el);
-                            }
-                        });
+        fetch('../Data/UsersVerifyPageRedirect.json').then(v => { return v.json() },
+            e => UserReportFetchError('无法加载数据: ' + e, 1)).then(v => {
+                window.__users_redirect = v;
+                LoginUi_submit_short.disabled = false;
+                fetch('../Data/usersShowInSelect.json').then(v => { return v.json() },
+                e => UserReportFetchError('无法加载数据: ' + e)).then(function (v) {
+                    let _l = v.length;
+                    let _p = LoginUi.querySelector('[data-select-user]');
+                    if (!_p) return false;
+                    _p.innerHTML = '';
+                    for (let i = 0; i < _l; ++i) {
+                        let el = document.createElement('a');
+                        el.style.display = "block";
+                        el.innerHTML = __users.users[v[i]].display_name;
+                        el.onclick = function () {
+                            LastStepUserLogin([v[i]]);
+                        }
+                        _p.appendChild(el);
+                    }
                 });
-        });
+            });
         return;
-    };
-})()
+    }; // Data_2011_.CurrentUser.isLogin
+
+    if (Data_2011_.CurrentUser.isLogin) {
+        document.title = '[用户管理中心] - ' + document.title;
+        UserManager.querySelector('[data-cun]').value =
+            __users.users[Data_2011_.CurrentUser.id].display_name;
+        UserManager.querySelector('[data-uid]').value =
+            __users.users[Data_2011_.CurrentUser.id].uid;
+        UserManager.querySelector('[data-uuid]').value = Data_2011_.CurrentUser.id;
+        // UserManager.querySelector('[data-copy]:nth-child(0)').onclick=()=>
+        UserManager.hidden = false;
+        $(UserManager).dialog({
+            modal: false,
+            title: document.title,
+            width: document.body.clientWidth - 10,
+            height: document.body.clientHeight - 2,
+            show: true,
+            closeOnEscape: false,
+            x: 0, y: 0,
+            close: function () {
+                location.href = '../../../';
+            }
+        });
+    }
+});
+if (!__users_loading_waiter) { _tmp0(); delete _tmp0 }
+else { __users_loading_waiter.then(_tmp0); delete tmp0 };
