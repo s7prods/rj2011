@@ -4,13 +4,14 @@
             let e = document.createElement('div');
             e.innerHTML = "<b class=f-bigger>还差一步!</b><br>" +
                 "您需要输入您的密码以验证您的身份。<br>" +
-                `<div class=disp-fiex>您的密码: <input style="flex: 100" placeholder` +
+                `<div class=disp-flex>您的密码: <input style="flex: 100" placeholder` +
                 `="请输入密码" autofocus type=password class=pswd />`;
             document.body.appendChild(e);
             $(function () {
                 $(e).dialog({
                     title: "还差一步",
                     modal: true,
+                    width: 'auto',
                     buttons: {
                         "确定": function () {
                             if (e.querySelector('.pswd').value ==
@@ -64,6 +65,7 @@
             $(e).dialog({
                 title: "还差一步",
                 modal: true,
+                width: 'auto',
                 buttons: {
                     "继续": function () {
                         location.href = __users_redirect[v];

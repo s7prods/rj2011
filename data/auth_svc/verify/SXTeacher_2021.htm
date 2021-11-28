@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="utf-8" />
+    <title>“实习teacher”验证页面</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="../../../res/preload.js"></script>
+    <script src="../../../res/jq3.6.0.js"></script>
+    <script src="../../../res/jqueryui-1.13.0/jquery-ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../../res/preload.css">
+    <link rel="stylesheet" type="text/css" href="../../../res/jqueryui-1.13.0/jquery-ui.min.css">
+</head>
+
+<body>
+    
+    <main>
+        <h1>“实习teacher”验证页面</h1>
+        <h2>确保你是“实习teacher”的一员再继续！</h2>
+        <button class="disp-block tali-c" onclick="questions.hidden=0;this.style.display='none'">
+            我是2021实习teacher</button>
+        <div id=questions hidden><br /><ol>
+
+            <div class=disp-flex>您的真名: <input style="flex:100" placeholder="输入汉字"></div>
+            <div class=disp-flex>您的学校: <input style="flex:100" placeholder="4个字"></div>
+            <div class=disp-flex>您实习的学校: <input style="flex:100" placeholder="4个字"></div>
+            
+            </ol><button id=CheckAnswer>确定</button>
+            <div id=result></div>
+        </div>
+    </main>
+
+    <script>
+        window.player = -1; /*
+            -1 -> Error
+            0  -> WSY
+            1  -> ZHQ
+        */
+        if(location.hash=='#W'||location.hash=='W') player=0;
+        if(location.hash=='#Z'||location.hash=='Z') player=1;
+        if(player==-1) location.href='../../../';
+
+        function bypass(){
+            Data_2011_.CurrentUser = { id: '', isLogin: true };
+            switch(player){
+                case 0:
+                    Data_2011_.CurrentUser.id = '7e41b9df-06a8-4121-8597-4b411c316a8a';
+                    break;
+                case 1:
+                    Data_2011_.CurrentUser.id = '9e29601c-3201-49f9-a7ad-ac2f36da0a36';
+                    break;
+                default:
+                    alert('数据异常，请刷新页面重新开始！');
+                    return;
+            };
+            localStorage.data_rj2011 = JSON.stringify(Data_2011_);
+            document.write("<h1>Don't forget us!!</h1><h2>No forgetting us!!</h2>"+
+            "<h3>不要忘记我们 -- 2011</h3><br>请勿刷新页面，5秒后将自动跳转...");
+            setTimeout("location.href = '../../../'",5000);
+        }
+
+        CheckAnswer.onclick = function () {
+            var v=function(el){return el.value};
+            var sum = 100, inputs = document.querySelectorAll('main input');
+            var sumtm = inputs.length, errtm = 0;
+
+            if(v(inputs[1])!="吉首大学") errtm++;
+            if(v(inputs[2])!="溶江中学") errtm++;
+            if((player==0&&v(inputs[0])!='王诗洋')||(player==1&&v(inputs[0])!='周恒琪')) errtm++;
+
+            sum = (sumtm - errtm) / sumtm * 100;
+            result.innerHTML = `共${sumtm}题,答对${sumtm-errtm}题,答错${errtm}题,得分${sum}`;
+            if(sum>=100){
+                result.innerHTML += "<br><a href=\"javascript:bypass()\">点击完成验证</a>";
+            } else {
+                result.innerHTML += '<br><span style="color:red">验证失败!</span>';
+            }
+        }
+    </script>
+    
+</body>
+
+</html>
