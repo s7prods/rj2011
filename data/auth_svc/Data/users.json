@@ -14,7 +14,7 @@
             "name_loginable": ["DELOMY"],
             "password": "DelomySiteAdmin_d59de4cfdb91",
             "token": [],
-            "groups": [2049]
+            "groups": [2049,3001]
         },
         "3b70af14-377d-456a-afcc-1c9f8e41e633": {
             "uid": 3002,

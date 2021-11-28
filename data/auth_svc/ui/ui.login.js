@@ -137,8 +137,8 @@ window._tmp0 = (function () {
                 modal: true,
                 closeOnEscape: false,
                 show: true,
-                width: document.body.clientWidth - 10,
-                height: document.body.clientHeight - 2,
+                width: document.body.clientWidth - 8,
+                height: document.body.clientHeight - 0,
                 x: 0, y: 0,
                 open: function (event, ui) {
                     $(".ui-dialog-titlebar-close", $(this).parent()).hide();
@@ -184,13 +184,22 @@ window._tmp0 = (function () {
         UserManager.querySelector('[data-uid]').value =
             __users.users[Data_2011_.CurrentUser.id].uid;
         UserManager.querySelector('[data-uuid]').value = Data_2011_.CurrentUser.id;
+        let gpel = UserManager.querySelector('[data-sgroups]'), _Mygp = [], _tEl = null;
+        for (let i in __users.groups) {
+            if (__users.users[Data_2011_.CurrentUser.id].groups.
+                indexOf(__users.groups[i].gid) + 1) {
+                _tEl = document.createElement('option');
+                _tEl.innerText = __users.groups[i].display_name;
+                gpel.appendChild(_tEl);
+            }
+        }
         // UserManager.querySelector('[data-copy]:nth-child(0)').onclick=()=>
         UserManager.hidden = false;
         $(UserManager).dialog({
             modal: false,
             title: document.title,
-            width: document.body.clientWidth - 10,
-            height: document.body.clientHeight - 2,
+            width: document.body.clientWidth - 8,
+            height: document.body.clientHeight - 0,//2,
             show: true,
             closeOnEscape: false,
             x: 0, y: 0,

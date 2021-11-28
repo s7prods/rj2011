@@ -63,16 +63,19 @@ a:hover {
     color: blue;
     font-size: smaller;
     text-decoration: none;
+    cursor: auto;
 }
 *.comment:hover {
     text-decoration: underline;
+    cursor: not-allowed;
 }
 *.comment:hover::after {
-    --comment-background-color: #b8e932;
+    --comment-background-color: #abcdef;
     content: attr(data-content);
     position: fixed;
     z-index: 3;
     border: 1px solid #606060;
     background-color: var(--comment-background-color);
     padding: 10px;
+    cursor: crosshair;
 }

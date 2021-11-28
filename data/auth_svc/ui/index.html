@@ -17,6 +17,7 @@
             height: 100%;
             left: 0;
             top: 0;
+            margin: 0;
         }
         #UserManager button[data-copy]::after {
             content: "复制";
@@ -34,10 +35,10 @@
                 personal blog (private), so please close this page now.</div>
             <br /><br />
             <label class=disp-flex for=LoginUi_username>
-                <span style="flex: auto;">在此输入您的姓名缩写(或别名): </span>
+                <span data-_style="flex: auto;">在此输入您的姓名缩写(或别名): </span>&nbsp;
                 <input placeholder="中国的十八座山和四四三三，小阳老师给你们30秒时间"
                      id=LoginUi_username name=LoginUi_username
-                    autocomplete=no style="flex:100" />
+                    autocomplete=no style="flex: 1" />&nbsp;
                 <button id=LoginUi_submit_short disabled>验证</button>
             </label>
             <br />
@@ -51,8 +52,8 @@
             <fieldset>
                 <legend>基本信息</legend>
                 <div class=disp-flex>
-                    当前登录用户:&nbsp;<input data-cun style="flex:100" readonly />&nbsp;
-                    <button onclick="location.href='logout.htm'">退出登录</button></div>
+                    当前登录用户:&nbsp;<input data-cun style="flex: 1" readonly />&nbsp;
+                    <button onclick="location.href='logout'">退出登录</button></div>
                 <div><span class=disp-iblock style="width:36px">UID</span>
                     <input readonly data-uid /><button data-copy disabled></button></div>
                 <div><span class=disp-iblock style="width:36px">UUID</span>
