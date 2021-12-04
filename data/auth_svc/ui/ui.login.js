@@ -19,7 +19,7 @@ window._tmp0 = (function () {
             })
             return false;
         }
-        if (password) {
+        if (__users.users[v].password) {
             let e = document.createElement('div');
             e.innerHTML = "<b class=f-bigger>还差一步!</b><br>" +
                 "您需要输入您的密码以验证您的身份。<br>" +
