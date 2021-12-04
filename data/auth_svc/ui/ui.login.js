@@ -1,6 +1,25 @@
 window._tmp0 = (function () {
     function LastStepUserLogin(v) {
-        if (__users.users[v].password) {
+        if (__users.users[v].nologin) {
+            let e = document.createElement('div');
+            e.innerHTML = __users.users[v].nologin_text || "由于管理员的设置，此用户无法登录。";
+            document.body.appendChild(e);
+            $(e).dialog({
+                "title": "系统错误",
+                modal: true,
+                'buttons': {
+                    '关闭': function () { $(this).dialog('close') }
+                },
+                close: function () {
+                    $(this).dialog("destroy");
+                    LoginUi_submit_short.disabled = false;
+                    LoginUi_submit_short.innerHTML = '验证';
+                    e.remove();
+                }
+            })
+            return false;
+        }
+        if (password) {
             let e = document.createElement('div');
             e.innerHTML = "<b class=f-bigger>还差一步!</b><br>" +
                 "您需要输入您的密码以验证您的身份。<br>" +
@@ -55,24 +74,44 @@ window._tmp0 = (function () {
                 })
             });
             return void 0;
-        }
-        let e = document.createElement('div');
-        e.innerHTML = "<b class=f-bigger>还差一步!</b><br>" +
-            "您当前输入的信息还不足以验证您的身份。<br>" +
-            "点击[继续]以验证身份并登录,<br>或点击[取消]以取消。";
-        document.body.appendChild(e);
-        $(function () {
-            $(e).dialog({
-                title: "还差一步",
-                modal: true,
-                width: 'auto',
-                buttons: {
-                    "继续": function () {
-                        location.href = __users_redirect[v];
+        } else if (__users.users[v].verify_page) {
+            let e = document.createElement('div');
+            e.innerHTML = "<b class=f-bigger>还差一步!</b><br>" +
+                "您当前输入的信息还不足以验证您的身份。<br>" +
+                "点击[继续]以验证身份并登录,<br>或点击[取消]以取消。";
+            document.body.appendChild(e);
+            $(function () {
+                $(e).dialog({
+                    title: "还差一步",
+                    modal: true,
+                    width: 'auto',
+                    buttons: {
+                        "继续": function () {
+                            location.href = __users.users[v].verify_page;
+                        },
+                        "取消": function () {
+                            $(this).dialog("close");
+                        }
                     },
-                    "取消": function () {
-                        $(this).dialog("close");
+                    close: function () {
+                        $(this).dialog("destroy");
+                        LoginUi_submit_short.disabled = false;
+                        LoginUi_submit_short.innerHTML = '验证';
+                        e.remove();
                     }
+                })
+            });
+        } else {
+            let e = document.createElement('div');
+            e.innerHTML = '<img src="../../../res/error.png" alt=Error />此用户无法登录，' +
+                '因为登录验证配置不正确。<br /><div class=f-smaller>若仍要使用此用户登录，请' +
+                '联系<i>Delomy</i>。</div>';
+            document.body.appendChild(e);
+            $(e).dialog({
+                "title": "验证错误",
+                modal: true,
+                'buttons': {
+                    '关闭': function () { $(this).dialog('close') }
                 },
                 close: function () {
                     $(this).dialog("destroy");
@@ -81,8 +120,10 @@ window._tmp0 = (function () {
                     e.remove();
                 }
             })
-        });
+            return false;
+        }
     }
+
     if (!(Data_2011_.CurrentUser && Data_2011_.CurrentUser.isLogin)) {
         document.title = '[登录] - ' + document.title;
         LoginUi_username.oninput = function () {
@@ -105,7 +146,7 @@ window._tmp0 = (function () {
                     }
                 }
                 reject("找不到指定的用户。请检查拼写是否正确，然后再试。<br>" +
-                    "若此问题仍出现，请联系<i>Delomy</i> (QQ:1022655575) 。");
+                    "若此问题仍出现，请联系<i>Delomy</i>。");
             }).then(function (v) {
                 LastStepUserLogin(v);
             }, function (er) {
@@ -153,27 +194,23 @@ window._tmp0 = (function () {
             });
         });
         LoginUi_submit_short.disabled = true;
-        fetch('../Data/UsersVerifyPageRedirect.json').then(v => { return v.json() },
-            e => UserReportFetchError('无法加载数据: ' + e, 1)).then(v => {
-                window.__users_redirect = v;
-                LoginUi_submit_short.disabled = false;
-                fetch('../Data/usersShowInSelect.json').then(v => { return v.json() },
-                e => UserReportFetchError('无法加载数据: ' + e)).then(function (v) {
-                    let _l = v.length;
-                    let _p = LoginUi.querySelector('[data-select-user]');
-                    if (!_p) return false;
-                    _p.innerHTML = '';
-                    for (let i = 0; i < _l; ++i) {
-                        let el = document.createElement('a');
-                        el.style.display = "block";
-                        el.innerHTML = __users.users[v[i]].display_name;
-                        el.onclick = function () {
-                            LastStepUserLogin([v[i]]);
-                        }
-                        _p.appendChild(el);
-                    }
-                });
-            });
+        fetch('../Data/usersShowInSelect.json').then(v => { return v.json() },
+        e => UserReportFetchError('无法加载数据: ' + e)).then(function (v) {
+            LoginUi_submit_short.disabled = false;
+            let _l = v.length;
+            let _p = LoginUi.querySelector('[data-select-user]');
+            if (!_p) return false;
+            _p.innerHTML = '';
+            for (let i = 0; i < _l; ++i) {
+                let el = document.createElement('a');
+                el.style.display = "block";
+                el.innerHTML = __users.users[v[i]].display_name;
+                el.onclick = function () {
+                    LastStepUserLogin([v[i]]);
+                }
+                _p.appendChild(el);
+            }
+        });
         return;
     }; // Data_2011_.CurrentUser.isLogin
 

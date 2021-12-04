@@ -1,7 +1,7 @@
 (function(){
 
     if (!(Data_2011_.CurrentUser && Data_2011_.CurrentUser.isLogin)) {
-        location.href = './data/auth_svc/ui/#/trust_check/'
+        location.href = './data/auth_svc/ui/#/trust_check/';return;
     }
 
     function onhashchange(event){

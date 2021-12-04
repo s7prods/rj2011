@@ -12,7 +12,7 @@
             "uid": 3001,
             "display_name": "Delomy",
             "name_loginable": ["DELOMY"],
-            "password": "DelomySiteAdmin_d59de4cfdb91",
+            "password": "DelomySiteAdmin",
             "token": [],
             "groups": [2049,3001]
         },
@@ -22,7 +22,8 @@
             "name_loginable": ["XCY","向神","学神"],
             "password": null,
             "token": [],
-            "groups": [3001]
+            "groups": [3001],
+            "verify_page": "../verify/XCY.html"
         },
         "8aa99e92-2450-4e58-8b12-3df44d3f9b86": {
             "uid": 3003,
@@ -30,7 +31,8 @@
             "name_loginable": ["JUICE","郑温","ZXX","张旭西"],
             "password": null,
             "token": [],
-            "groups": [3001,3002]
+            "groups": [3001,3002],
+            "verify_page": "../verify/HJTSJ.html#J"
         },
         "972a2fc5-e8a7-468e-8318-0e69d6b34675": {
             "uid": 3004,
@@ -38,7 +40,8 @@
             "name_loginable": ["LOSER","律师","绿尸","LISE"],
             "password": null,
             "token": [],
-            "groups": [3001,3002]
+            "groups": [3001,3002],
+            "verify_page": "../verify/HJTSJ.html#L"
         },
         "165d077c-5cc8-4d96-b12a-c7260d999a12": {
             "uid": 3005,
@@ -46,7 +49,8 @@
             "name_loginable": ["MIA","TWN","天王男","王南"],
             "password": null,
             "token": [],
-            "groups": [3001,3002]
+            "groups": [3001,3002],
+            "verify_page": "../verify/HJTSJ.html#M"
         },
         "a27ac0ab-bb21-459a-a3eb-df5b34e74325": {
             "uid": 3006,
@@ -54,7 +58,8 @@
             "name_loginable": ["PQL","LILY"],
             "password": null,
             "token": [],
-            "groups": [3004,3003]
+            "groups": [3004,3003],
+            "verify_page": "../verify/building.htm"
         },
         "7e41b9df-06a8-4121-8597-4b411c316a8a": {
             "uid": 3007,
@@ -62,7 +67,8 @@
             "name_loginable": ["WSY","王诗洋"],
             "password": null,
             "token": [],
-            "groups": [3004,3005]
+            "groups": [3004,3005],
+            "verify_page": "../verify/SXTeacher_2021.htm#W"
         },
         "9e29601c-3201-49f9-a7ad-ac2f36da0a36": {
             "uid": 3008,
@@ -70,7 +76,8 @@
             "name_loginable": ["ZHQ","周恒琪","安静","俺静","安静老师","俺静老师"],
             "password": null,
             "token": [],
-            "groups": [3004,3005]
+            "groups": [3004,3005],
+            "verify_page": "../verify/SXTeacher_2021.htm#Z"
         },
         "7f8d7d52-1cbd-465d-80d2-f45879f93b06": {
             "uid": 3009,
@@ -78,7 +85,27 @@
             "name_loginable": ["TSL","MELODY","AMY","田世林"],
             "password": null,
             "token": [],
-            "groups": [3004]
+            "groups": [3004],
+            "verify_page": "../verify/building.htm"
+        },
+        "ce24baa5-b2b0-4b43-898c-c8919df7388c": {
+            "uid": 3010,
+            "display_name": "普通班民",
+            "name_loginable": [],
+            "password": null,
+            "token": [],
+            "groups": [3001],
+            "verify_page": "../verify/classic.html#common"
+        },
+        "917c3755-cf8a-4769-b47c-14f0c72857b2": {
+            "uid": 3011,
+            "display_name": "小地图",
+            "name_loginable": ["LXY","XDT","SMALL MAP"],
+            "password": null,
+            "token": [],
+            "groups": [],
+            "nologin": true,
+            "nologin_text": "就美让你登，怄死你"
         }
     },
     "groups": {
