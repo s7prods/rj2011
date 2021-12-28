@@ -90,7 +90,13 @@
             `.u__hidrule-h-tips::after{display:inline-block;content:"[拒绝访问。]";` +
             `color:red}\n*.u_${u}_hidrule-h,*.u_${u}_hidrule-h-tips{display:none !im` +
             `portant;}\n.u_${u}_hidrule-h-tips::after{display:inline-block;content:"` +
-            `[拒绝访问。]";color:red}\n*.u_${u}_hidrule-s{display:inline-block;}`
+            `[拒绝访问。]";color:red}\n*.u_${u}_hidrule-s{display:inline-block;}\n`;
+        for (let i in __users.groups) {
+            if (__users.users[Data_2011_.CurrentUser.id].groups.
+                indexOf(__users.groups[i].gid) + 1) {
+                _el.innerHTML += `\n.g_${__users.groups[i].gid}_hidrule-h{display:none}`;
+            }
+        }
         document.head.appendChild(_el);
     }
     if (window.__users_loading_waiter) __users_loading_waiter.then(_tmp1)

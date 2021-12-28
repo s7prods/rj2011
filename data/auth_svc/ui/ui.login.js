@@ -238,7 +238,7 @@ window._tmp0 = (function () {
             width: document.body.clientWidth - 8,
             height: document.body.clientHeight - 0,//2,
             show: true,
-            closeOnEscape: false,
+            closeOnEscape: true,
             x: 0, y: 0,
             close: function () {
                 location.href = '../../../';

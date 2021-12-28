@@ -22,7 +22,7 @@
             "name_loginable": ["XCY","向神","学神"],
             "password": null,
             "token": [],
-            "groups": [3001],
+            "groups": [3001,3006],
             "verify_page": "../verify/XCY.html"
         },
         "8aa99e92-2450-4e58-8b12-3df44d3f9b86": {
@@ -136,6 +136,10 @@
         "4772a16e-b404-432c-9daa-0c213eec5ca1": {
             "gid": 3005,
             "display_name": "实习teacher"
+        },
+        "bf6f286c-052d-4a48-9dd7-0f13c5c88a91": {
+            "gid": 3006,
+            "display_name": "纯洁的孩子"
         }
     }
 }
