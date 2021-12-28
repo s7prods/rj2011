@@ -1,0 +1,1 @@
+function isIe(){try{return eval('(()=>{return false})()')}catch(E){return true}}
