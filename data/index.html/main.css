@@ -1,0 +1,64 @@
+
+
+*:disabled, *[disabled] {
+    cursor: not-allowed !important;
+}
+
+
+a, button {
+    cursor: pointer;
+}
+a {
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+a:any-link, a[href] {
+    color: blue;
+}
+
+
+
+.wrapper {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background: inherit;
+}
+
+
+#main {
+    padding: 10px;
+}
+
+#main .nav {
+    display: flex;
+    flex-direction: column;
+}
+#main nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: calc(100% - (10px * 2));
+    height: auto;
+    padding: 10px;
+}
+#main nav a {
+    margin-right: 5px;
+}
+
+#main footer {
+    text-align: center;
+    margin-top: 50px;
+    color: #cccccc;
+    font-size: smaller;
+}
+
+
+

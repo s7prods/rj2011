@@ -1,0 +1,29 @@
+.loading-icon-01 {
+    display: inline-block;
+    aspect-ratio: 1;
+
+    border: 10px solid;
+    border-color: var(--background);
+    border-radius: 100%;
+
+    border-top-color: var(--fill);
+
+    animation: loading-animation-01 1.2s infinite linear;
+    -webkit-animation: loading-animation-01 1.2s infinite linear;
+    -moz-animation: loading-animation-01 1.2s infinite linear;
+
+    --background: #f6f6f6;
+    --fill: #606060;
+
+}
+
+@keyframes loading-animation-01 {
+    0% {
+        rotate: 0deg;
+    }
+    100% {
+        rotate: 360deg;
+    }
+}
+
+

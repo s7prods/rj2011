@@ -1,60 +1,38 @@
 <!DOCTYPE html>
-<html lang="zh">
-
+<html lang="zh-cn">
 <head>
-    <meta charset="utf-8" />
-    <title>2011</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--script src="./res/fuckie.js"></script-->
-    <script>try{eval('$=>{}')}catch(_){location.href='https://support.dmeng.net/upgrade-your-browser.html'}</script>
-    <script src="./res/getUrlValue.js"></script>
-    <script src="./res/jq3.6.0.js"></script>
-    <script src="./res/jqueryui-1.13.0/jquery-ui.min.js"></script>
-    <script src="./res/preload.js"></script>
-    <link rel="stylesheet" type="text/css" href="./res/preload.css">
-    <link rel="stylesheet" type="text/css" href="./res/index.html.css">
-    <link rel="stylesheet" type="text/css" href="./res/jqueryui-1.13.0/jquery-ui.min.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rj2011</title>
 </head>
-
 <body>
+    
+    <div>
+        <div class="wrapper">
+            <div>
+                <div id="main">
 
-    <nav>
-        <a href="./"><a href="http://xxzrjzx.com/" target=_blank>
-        <span style="transform:rotate(270deg);float:left">RJ</span></a>
-        <img width=32 height=32 src="./res/icon.png" alt="Icon" title=2011 />
-        </a>
-        <img style="width:68px;height:1px;opacity:1;"></img>
-        <a href="./" title="Homepage">主页</a>
-        <a href="#/indexes/" title="Index">目录</a>
-        <a href="#/settings/" title="Settings">设置</a>
-        <input size=30 placeholder="搜索文章..." /><button id=request_search>搜索</button>
+                    <div id="loading_page">
+                        <link rel="stylesheet" href="./data/index.html/loading.css" />
+                        <style>#loading_page { display: flex; flex-direction: column; position: fixed; left: 0; right: 0; top: 0; bottom: 0; padding: 10px; overflow: auto; }</style>
+                        <div style="position: sticky; top: 0; background: white; display: flex; align-items: center;">
+                            <div class="loading-icon-01" style="width: 60px"></div>
+                            <div style="display: inline-block; width: 8vw;"></div>
+                            <div>Loading...</div>
+                        </div>
 
-        <span data-right-align>
-        <a href="#/account/login/" title="Login" hidden>登录</a>
-        <a href="#/account/my/" title="My">Me</a>
-        </span>
-    </nav>
+                        <div id="loading_details" style="flex-grow: 1; margin-top: 10px;">
+                            <div>Loading loader</div>
+                        </div>
+                    </div>
 
-    <main id=main>
-        <span id=main_status_bar>
-            <span data-status_loading hidden>
-                <span class="loading_spin1_16"></span>
-                <span data-status_loading_text class=disp-iblock></span>
-                <button data-status_loading_abortbtn hidden>Cancel</button>
-            </span>
-        </span>
-        <div id=passage_show>
-            
+                </div>
+            </div>
         </div>
-    </main>
+    </div>
 
-    <footer>
-        <div>Copyright 2011(c)2020-2021. All rights reserved.</div>
-        <div style="color:#ccc;font-size: 8px;">未经允许,严禁外传!</div>
-        <div><a href="#/about/website">About 2011 WebSite</a></div>
-    </footer>
+    <script src="data/index.html/loader.min.js" async></script>
 
-    <script src="./res/index.html.js" async></script>
 </body>
-
 </html>
