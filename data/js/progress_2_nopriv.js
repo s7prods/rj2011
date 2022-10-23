@@ -183,10 +183,10 @@ This is deprecated. It just supports for old browsers. Do not use it in new proj
             let opacity = 1;
             let validate = function (d) { return (d < 0) ? 0 : d; };
             timer = setInterval(function (thisArg) {
-                thisArg.elem_root.style.opacity = validate(opacity -= 0.025);
+                thisArg.__elem_root__.style.opacity = validate(opacity -= 0.025);
                 if (opacity <= 0) {
                     clearInterval(timer);
-                    thisArg.elem_root.style.display = 'none';
+                    thisArg.__elem_root__.style.display = 'none';
 
                     if (prop.destroy) thisArg.destroy.call(thisArg);
                 }
