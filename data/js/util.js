@@ -72,10 +72,24 @@ function getRandom(min = 0, max = 1) {
 
 
 async function LoadChunk(chunk_base, chunk_width = 1, chunk_height = 1, callback = null) {
+    let blob = await LoadChunkEx({
+        chunk_base,
+        chunk_width,
+        chunk_height,
+        callback
+    });
+    try {
+        return await blob.text();
+    }
+    catch (_) {
+        return await (new Response(blob)).text();
+    }
+}
+async function LoadChunkEx({chunk_base, chunk_width = 1, chunk_height = 1, callback = null}) {
     if (typeof(chunk_base) !== 'string' || !chunk_width || !chunk_height) throw new TypeError(87);
 
     let chunkstr = '';
-    let chunkresult = '';
+    let chunkresult = [];
     for (let h = 0; h < chunk_height; ++h) {
         for (let w = 0; w < chunk_width; ++w) {
             chunkstr = `chunk-${h}-${w}`;
@@ -83,7 +97,7 @@ async function LoadChunk(chunk_base, chunk_width = 1, chunk_height = 1, callback
             try {
                 let fetchresult = await fetch(chunkstr);
                 if (!fetchresult.ok) throw new Error(`Error ${fetchresult.status}`);
-                chunkresult += await fetchresult.text();
+                chunkresult.push(await fetchresult.blob());
             }
             catch (error) {
                 throw new Error(`Failed to load chunk-${h}-${w} in ${chunk_base}:\n` + error);
@@ -92,7 +106,7 @@ async function LoadChunk(chunk_base, chunk_width = 1, chunk_height = 1, callback
         }
     }
 
-    return chunkresult;
+    return new Blob(chunkresult);
 
 }
 

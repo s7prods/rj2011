@@ -1,6 +1,55 @@
-<r-warn-box>
-    <h1 style="text-align:center">距离中考仅剩<span data-myid="distance-from-exam"></span></h1>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主页</title>
+</head>
+<body>
 
-</r-warn-box>
+    <r-info-box>
+        <div slot="title">Unofficial Site</div>
+        <div lang="en-US" id="unofficial_tips" style="transition: all 0.2s; overflow: hidden;">
+            <p style="text-indent:2em">
+                This is an unofficial site for class 2011 in
+                <rj-icon></rj-icon>
+                middle school. 
+                Before continuing, you should understand and agree that:
+            </p>
 
-<script src="data/main/data/data/index/index.js"></script>
+            <ul>
+                <li>This is <b>NOT</b> the official site for 2011</li>
+                <li>To protect personal privacy, some content is only visible after login</li>
+                <li>You might need to ask for the administrator of this site how to login</li>
+                <li>This website uses some network technologies (cookies, localStorage, indexedDB, etc.) to improve your use experience and
+                store data. By continuing to use this website, you understand and agree.</li>
+            </ul>
+
+            <div>
+                <button id="btn_continue">Continue</button>
+                <button id="btn_icantunderstanden" style="float:right" lang="zh-CN">我看不懂中文</button>
+            </div>
+        </div>
+    </r-info-box>
+
+    <br>
+
+    <r-warn-box>
+        <div slot="title">中考倒计时</div>
+        <div style="font-size: x-large">
+            <span>距离中考仅剩 </span><span id="exam_time"></span>
+        </div>
+        <div id="exam_saying">玫瑰绽放，逆风翻盘，我们各自努力，顶峰再相见！</div>
+    </r-warn-box>
+
+    <br>
+
+    <r-info-box>
+        <div>这个人懒死了，主页都没做</div>
+        <div style="font-size:small">其实是这个星期没时间做，可以先看看<a href onclick="parent.location.hash='#/index/'">目录</a></div>
+    </r-info-box>
+
+    <script src="index.js" defer></script>
+
+</body>
+</html>

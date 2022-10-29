@@ -248,6 +248,11 @@ This is deprecated. It just supports for old browsers. Do not use it in new proj
             this.execute_hide({ password: password, destroy: true }); 
         }
 
+        setSvgSize(size) {
+            const oldStyle = (this.__elem_root__.getAttribute('style') || '');
+            this.__elem_root__.setAttribute('style', oldStyle + ` --svgsize: ${size}px;`)
+        }
+
         on(ev, h, p) {
             return this.__elem_evft__.addEventListener(ev, h, p);
         }

@@ -1,0 +1,24 @@
+*:disabled,
+*[disabled] {
+    cursor: not-allowed !important;
+}
+
+
+a, button {
+    cursor: pointer;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a:any-link,
+a[href] {
+    color: blue;
+}
+
+

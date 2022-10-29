@@ -251,6 +251,11 @@
             return element.append(this.__elem_root__);
         }
 
+        setSvgSize(size) {
+            const oldStyle = (this.__elem_root__.getAttribute('style') || '');
+            this.__elem_root__.setAttribute('style', oldStyle + ` --svgsize: ${size}px;`)
+        }
+
         redraw() {
             let rect = this.__elem_ch1F__.firstElementChild.getBoundingClientRect();
             let min = rect.x, max = rect.x + (rect.width * this.__elem_ch1F__.childElementCount);

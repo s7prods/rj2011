@@ -28,6 +28,12 @@
         },
         {
             "type": "js",
+            "url": "data/js/winmenu-helper.js",
+            "async": false,
+            "required": true
+        },
+        {
+            "type": "js",
             "url": "data/main/js/r-custom-elements.js",
             "async": true
         },

@@ -35,6 +35,24 @@ a:any-link, a[href] {
 
 #main {
     padding: 10px;
+    background: white;
+    --background: white;
+
+}
+
+#main .page-loading-progress {
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+    width: 231px;
+    height: 32px;
+    text-align: right;
+    background: var(--background);
+}
+@media screen and (max-width: 399px) {
+    #main .page-loading-progress {
+        width: 105px;
+    }
 }
 
 #main .nav {
@@ -48,6 +66,7 @@ a:any-link, a[href] {
     width: calc(100% - (10px * 2));
     height: auto;
     padding: 10px;
+    background: var(--background);
 }
 #main nav a {
     margin-right: 5px;
@@ -56,8 +75,16 @@ a:any-link, a[href] {
 #main footer {
     text-align: center;
     margin-top: 50px;
+    margin-bottom: 30px;
     color: #cccccc;
     font-size: smaller;
+}
+
+#main main iframe.content {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    border: none;
 }
 
 
