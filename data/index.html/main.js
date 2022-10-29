@@ -151,6 +151,9 @@
             '/account/': function handler(data) {
                 alert('暂未实现')
             },
+            '/about/': function handler(data) {
+                alert('暂未实现')
+            },
             'index\u{FEFF}': function handler(data) {
                 return loadDefaultContent();
             },
@@ -242,7 +245,7 @@
                     page_load_progress.value = page_load_progress.getHalfGeoValue();
                     setTimeout(() => {
                         page_load_progress.value = 100;
-                        ifr.style.display = '';
+                        //ifr.style.display = '';
                         setTimeout(() => {
                             page_load_progress.hide();
                         }, 200);
@@ -251,7 +254,7 @@
                 ifr.onload = null; // 及时删除引用,避免反复调用产生的bug
             };
             ifr.classList.add('content');
-            ifr.style.display = 'none';
+            //ifr.style.display = 'none';
             cont.append(ifr);
         }
 
