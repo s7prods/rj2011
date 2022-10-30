@@ -115,7 +115,12 @@
                 document.title = el.contentWindow.document.title + ' - ' + title_base;
             }
             catch (err) {
-                console.error('Unable to set height of iframe.\n', err);
+                console.warn('Unable to set height of iframe.\n', err);
+                try { el.contentWindow.location }
+                catch (err2) {
+                    console.error('[Security Error] Unable to access iframe, error', err2);
+                    loadDefaultContent();
+                }
             }
         }
         setInterval(adjust_the_height_of_iframe, 1000);
@@ -225,6 +230,7 @@
 
         async function loadContentWithSandbox(url, type = 'page') {
             if (!url) throw new TypeError('Invalid paramter');
+            if (url.startsWith('http') || url.startsWith('//')) throw new Error('Security Error');
 
             cont.innerHTML = '';
             page_load_progress.value = 0;
@@ -254,8 +260,15 @@
                 ifr.onload = null; // 及时删除引用,避免反复调用产生的bug
             };
             ifr.classList.add('content');
-            //ifr.style.display = 'none';
+            ifr.style.display = 'none';
             cont.append(ifr);
+            let old_doc = ifr.contentDocument;
+            let _interval = setInterval(function () {
+                let new_doc = ifr.contentDocument;
+                if (old_doc === new_doc) return;
+                clearInterval(_interval);
+                ifr.style.display = '';
+            }, 250);
         }
 
 
