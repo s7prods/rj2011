@@ -243,7 +243,7 @@
             // src += encodeURIComponent(url);
             // ifr.src = src;
             ifr.src = url;
-            ifr.onload = function () {
+            function ifr_onload(ifr) {
                 (async function (ifr) {
                     page_load_progress.show();
                     await loadContentScripts(ifr);
@@ -251,7 +251,7 @@
                     page_load_progress.value = page_load_progress.getHalfGeoValue();
                     setTimeout(() => {
                         page_load_progress.value = 100;
-                        //ifr.style.display = '';
+                        ifr.style.display = '';
                         setTimeout(() => {
                             page_load_progress.hide();
                         }, 200);
@@ -267,7 +267,8 @@
                 let new_doc = ifr.contentDocument;
                 if (old_doc === new_doc) return;
                 clearInterval(_interval);
-                ifr.style.display = '';
+                //ifr.style.display = '';
+                ifr_onload(ifr);
             }, 250);
         }
 
