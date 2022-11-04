@@ -257,7 +257,6 @@
                         }, 200);
                     }, getRandom(500, 1000));
                 })(ifr);
-                ifr.onload = null; // 及时删除引用,避免反复调用产生的bug
             };
             ifr.classList.add('content');
             ifr.style.display = 'none';
