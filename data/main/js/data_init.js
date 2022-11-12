@@ -27,7 +27,7 @@
     globalThis.GetUserInfo = async function g_u(user = null) {
         if (!user) {
             try { user = (rj2011_data.user.current.id) }
-            catch (anyerr) { user = ('.guest'); }
+            catch (anyerr) { user = ('guest'); }
         }
         if (__userinfocache.get(user)) {
             return __userinfocache.get(user);
@@ -39,7 +39,7 @@
         };
         let json = await resp.json();
         json._user = user;
-        if (user === '.guest') json.isGuest = true;
+        if (user === 'guest') json.isGuest = true;
         __userinfocache.set(user, json);
         return json;
     }
@@ -62,7 +62,7 @@
             return luUser0(rj2011_data.user.current.id)
         }
         catch (anyerr) {
-            return luUser0('.guest');
+            return luUser0('guest');
         }
     }
 
