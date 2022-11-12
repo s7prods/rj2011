@@ -40,6 +40,13 @@
             .then(function (chunk_data) {
                 main.append(divFromText(chunk_data));
                 cont = document.querySelector('#main main');
+                prog.value = 30;
+            })
+            .then(function () {
+                LoadUserInfo()
+                InitUserComponents()
+            })
+            .then(function () {
                 load_content({
                     callback: function () {
                         prog.value = 35;
@@ -105,6 +112,7 @@
         }
         
         globalThis.adjust_the_height_of_iframe = function () {
+            if (!cont) return false;
             const el = cont.querySelector('iframe.content');
             if (!el) return false;
             try {
@@ -116,9 +124,9 @@
             }
             catch (err) {
                 console.warn('Unable to set height of iframe.\n', err);
-                try { el.contentWindow.location }
+                try { el.contentWindow.location.origin }
                 catch (err2) {
-                    console.error('[Security Error] Unable to access iframe, error', err2);
+                    console.error('[Security Error] Unable to access iframe, reloading document.\nError', err2);
                     loadDefaultContent();
                 }
             }
@@ -156,8 +164,11 @@
             '/account/': function handler(data) {
                 alert('暂未实现')
             },
+            '/search/': function handler(data) {
+                return loadContentFromUrl('data/main/data/data/search/#' + data);
+            },
             '/about/': function handler(data) {
-                alert('暂未实现')
+                return loadContentFromUrl('data/main/data/data/about/about.html#' + data);
             },
             'index\u{FEFF}': function handler(data) {
                 return loadDefaultContent();
@@ -187,61 +198,63 @@
             const base_value = 20, max_value = page_load_progress.getHalfGeoValue();
             const item_count = Reflect.ownKeys(content_scripts).length;
             const step = (max_value - base_value) / item_count;
-            for (const script in content_scripts.scripts) {
-                let content = content_scripts.scripts[script];
-                if (!content) {
+            const CONTINUE = ({});
+            async function exec(k, v, type) {
+                let content = content_scripts[k][v];
+                if (!content || !content.url) {
                     try {
-                        const resp = await fetch(script);
+                        const resp = await fetch(v);
                         if (!resp.ok) {
                             throw 'HTTP ' + resp.status + ' ' + resp.statusText;
                         }
-                        content_scripts.scripts[script] = await resp.text();
-                        content = content_scripts.scripts[script];
+                        content_scripts[k][v] = new Object();
+                        content_scripts[k][v].blob = await resp.blob();
+                        content_scripts[k][v].url = URL.createObjectURL(content_scripts[k][v].blob);
+                        content = content_scripts[k][v].url;
                     }
                     catch (error) {
-                        console.warn('Unable to load script', script, 'because', error);
-                        continue;
+                        console.warn('Unable to load ', script, 'because', error);
+                        return CONTINUE;
                     }
+                } else content = content.url;
+                const t = ifr.contentWindow.document.createElement(type);
+                switch (type) {
+                    case 'link':
+                        t.rel = 'stylesheet';
+                        t.href = content;
+                        break;
+                
+                    default:
+                        t.src = content;
+                        break;
                 }
-                ifr.contentWindow.eval(content);
+                t.src = content;
+                (ifr.contentWindow.document.head || ifr.contentWindow.document.documentElement).append(t);
+            }
+            for (const script in content_scripts.scripts) {
+                await exec('scripts', script, 'script');
             }
             for (const style in content_scripts.styles) {
-                let content = content_scripts.styles[style];
-                if (!content) {
-                    try {
-                        const resp = await fetch(style);
-                        if (!resp.ok) {
-                            throw 'HTTP ' + resp.status + ' ' + resp.statusText;
-                        }
-                        content_scripts.styles[style] = await resp.text();
-                        content = content_scripts.styles[style];
-                    }
-                    catch (error) {
-                        console.warn('Unable to load style', style, 'because', error);
-                        continue;
-                    }
-                }
-                let el = ifr.contentWindow.document.createElement('style');
-                el.innerHTML = content;
-                ifr.contentWindow.document.head.append(el);
+                await exec('styles', style, 'link');
             }
             page_load_progress.value = max_value;
         }
 
+        let __isfirstcall_loadContentWithSandbox = true;
         async function loadContentWithSandbox(url, type = 'page') {
             if (!url) throw new TypeError('Invalid paramter');
             if (url.startsWith('http') || url.startsWith('//')) throw new Error('Security Error');
 
+            if (__isfirstcall_loadContentWithSandbox) {
+                __isfirstcall_loadContentWithSandbox = false;
+
+                page_load_progress.setSvgSize(32);
+            }
             cont.innerHTML = '';
             page_load_progress.value = 0;
-            page_load_progress.setSvgSize(32);
             page_load_progress.show();
             let ifr = document.createElement('iframe');
-            // let src = './data/embedded/page/page.html?type=';
-            // src += encodeURIComponent(type);
-            // src += '&url=';
-            // src += encodeURIComponent(url);
-            // ifr.src = src;
+            ifr.sandbox = 'allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts';
             ifr.src = url;
             function ifr_onload(ifr) {
                 (async function (ifr) {
@@ -270,6 +283,14 @@
                 ifr_onload(ifr);
             }, 250);
         }
+
+        window.addEventListener('message', function (ev) {
+            if (ev.origin !== location.origin) return;
+            if (!(ev.data) || (ev.data.type !== 'redirect_hash')) return;
+            if (!(ev.data.url)) return;
+            
+            location.hash = '#/' + ev.data.url;
+        })
 
 
         function hashchange(ev) {

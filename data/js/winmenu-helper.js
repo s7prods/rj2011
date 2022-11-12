@@ -123,11 +123,7 @@
             }
         }
 
-        function evh(ev) {
-            if (ev.target.classList.contains('backdrop')) return false;
-            if (ev.target.classList.contains('disabled')) return false;
-            if (ev.target === hMenu.lastElementChild) return false;
-
+        function close(hMenu) {
             hMenu.removeAttribute('open');
 
             hMenu.remove();
@@ -145,6 +141,17 @@
             hMenu.removeEventListener('keydown', fh, {
                 capture: true
             });
+
+        }
+
+        function evh(ev) {
+            if (flags && flags.closeOnBlur) return close(hMenu);
+            if (ev.target.classList.contains('backdrop')) return false;
+            if (ev.target.classList.contains('disabled')) return false;
+            if (ev.target === hMenu.lastElementChild) return false;
+
+            close(hMenu);
+
             stop(ev);
         }
 
@@ -164,6 +171,16 @@
         hMenu.addEventListener('keydown', fh, {
             capture: true
         });
+        if (flags && flags.closeOnBlur) {
+            hMenu.lastElementChild.addEventListener('mouseover', function () {
+                hMenu.firstElementChild.addEventListener('mouseover', function () {
+                    close(hMenu);
+                }, {
+                    capture: true,
+                    once: true
+                });
+            }, { once: true });
+        }
 
         return true;
     }

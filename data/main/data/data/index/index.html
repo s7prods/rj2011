@@ -46,7 +46,7 @@
 
     <r-info-box>
         <div>这个人懒死了，主页都没做</div>
-        <div style="font-size:small">其实是这个星期没时间做，可以先看看<a href onclick="parent.location.hash='#/index/'">目录</a></div>
+        <div style="font-size:small">其实是这个星期没时间做，可以先看看<a href="javascript:" onclick="parent.postMessage({type:'redirect_hash',url:'index/'},'*')">目录</a></div>
     </r-info-box>
 
     <script src="index.js" defer></script>
