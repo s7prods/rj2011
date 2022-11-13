@@ -11,12 +11,3 @@
         <a href="#/practice/?text=内卷" title="Incircle">内卷</a>
         <a href="#/settings/" title="Settings">设置</a>
 
-        <span style="float: right;">
-            <a class="button login-button login" href="#/account/me/" title="Login" onclick="return false">
-                <img src="" alt="avatar" title="avatar" width="32" height="32" />
-            </a>
-        </span>
-    </nav>
-
-    <div style="margin-top:40px">&nbsp;</div>
-</div>

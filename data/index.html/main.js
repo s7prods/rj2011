@@ -43,13 +43,20 @@
                 prog.value = 30;
             })
             .then(function () {
-                LoadUserInfo()
-                InitUserComponents()
+                if (navigator.userAgent.includes('Mozilla/')) {
+                    const el = document.getElementById('SEO')
+                    if (el) el.remove()
+                }
             })
-            .then(function () {
+            .then(async function () {
+                await LoadUserInfo()
+                prog.value = 35
+                await InitUserComponents()
+                prog.value = 40
+
                 load_content({
                     callback: function () {
-                        prog.value = 35;
+                        prog.value = 75;
                         setTimeout(all_finished, 300);
                     }
                 });
@@ -99,6 +106,8 @@
 
     {
         const title_base = 'rj2011';
+        const sandbox_options = 'allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts';
+        const ErrorSandboxViolation = Object.create({ toString() { return 'Sandbox Violation' } });
 
         function load_content({ event = null, callback = null }) {
             let returnValue = (function () {
@@ -110,12 +119,21 @@
             if (callback) callback(returnValue);
             return returnValue;
         }
+
+        let ifrdoccheck = null;
         
-        globalThis.adjust_the_height_of_iframe = function () {
+        //globalThis.
+        let adjust_the_height_of_iframe = function () {
             if (!cont) return false;
             const el = cont.querySelector('iframe.content');
             if (!el) return false;
             try {
+                // check sandbox
+                if (String(el.sandbox) !== sandbox_options) {
+                    throw ErrorSandboxViolation;
+                }
+
+                // adjust the height of iframe
                 let height = el.contentWindow.document.documentElement.offsetHeight;
                 el.style.height = height + 'px';
 
@@ -123,8 +141,11 @@
                 document.title = el.contentWindow.document.title + ' - ' + title_base;
             }
             catch (err) {
-                console.warn('Unable to set height of iframe.\n', err);
-                try { el.contentWindow.location.origin }
+                console.warn('Unable to set height of iframe.\n', (err));
+                try {
+                    if (err === ErrorSandboxViolation) throw err;
+                    el.contentWindow.location.origin
+                }
                 catch (err2) {
                     console.error('[Security Error] Unable to access iframe, reloading document.\nError', err2);
                     loadDefaultContent();
@@ -254,7 +275,7 @@
             page_load_progress.value = 0;
             page_load_progress.show();
             let ifr = document.createElement('iframe');
-            ifr.sandbox = 'allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts';
+            ifr.sandbox = sandbox_options;
             ifr.src = url;
             function ifr_onload(ifr) {
                 (async function (ifr) {
@@ -289,7 +310,15 @@
             if (!(ev.data) || (ev.data.type !== 'redirect_hash')) return;
             if (!(ev.data.url)) return;
             
-            location.hash = '#/' + ev.data.url;
+            switch (ev.data.url) {
+                case '$index':
+                    location.hash = '#/index/';
+                    break;
+            
+                default:
+                    location.hash = '#/' + ev.data.url;
+                    break;
+            }
         })
 
 

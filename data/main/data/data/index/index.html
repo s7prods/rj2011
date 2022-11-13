@@ -42,13 +42,22 @@
         <div id="exam_saying">玫瑰绽放，逆风翻盘，我们各自努力，顶峰再相见！</div>
     </r-warn-box>
 
-    <br>
+    <div style="margin-top: 50px;"></div>
 
-    <r-info-box>
-        <div>这个人懒死了，主页都没做</div>
-        <div style="font-size:small">其实是这个星期没时间做，可以先看看<a href="javascript:" onclick="parent.postMessage({type:'redirect_hash',url:'index/'},'*')">目录</a></div>
-    </r-info-box>
+    <main>
+        <content-scroll-card></content-scroll-card>
 
+        <div id="contents_wrapper">
+            <div id="contents">
+                <div class="top"></div>
+                <div class="it"></div>
+                
+                <div data-loading-data style="color:grey">正在加载</div>
+            </div>
+        </div>
+    </main>
+    
+    <link rel="stylesheet" href="index.css" />
     <script src="index.js" defer></script>
 
 </body>

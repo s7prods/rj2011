@@ -1,1 +1,9 @@
-<main></main>
+        <span style="float: right;">
+            <a class="button login-button login" href="#/account/me/" title="Login" onclick="return false">
+                <img src="" alt="avatar" title="avatar" width="32" height="32" />
+            </a>
+        </span>
+    </nav>
+
+    <div style="margin-top:40px">&nbsp;</div>
+</div>

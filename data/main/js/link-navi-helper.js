@@ -14,7 +14,7 @@ document.documentElement.addEventListener('click', function (ev) {
         return false;
     }
 
-    let p = (ev.target.getAttribute('data-article') ? 'article' : 'page') + '/' + href;
+    let p = (href.startsWith('#/')) ? (href.replace('#/', '')) : ((ev.target.getAttribute('data-article') ? 'article' : 'page') + '/' + href);
     parent.postMessage({
         "type": "redirect_hash",
         "url": p

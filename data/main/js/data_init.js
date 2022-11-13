@@ -44,18 +44,19 @@
         return json;
     }
 
-    globalThis.LoadUserInfo = function luUser0(user = null) {
+    globalThis.LoadUserInfo = async function luUser0(user = null) {
         if (user) {
-            fetch(GetUserPath(user) + 'user.json')
-            .then(v => v.json())
-            .then(function (d) {
-                document.querySelector('#main nav .login-button img').src = GetUserPath(user) + d.avatar
-            })
-            .catch(function (err) {
+            try {
+                const resp = await fetch(GetUserPath(user) + 'user.json')
+                const json = await resp.json()
+                document.querySelector('#main nav .login-button img').src = GetUserPath(user) + json.avatar
+                return 0
+            } catch {
                 console.error('Failed to load user', user, '\n',
                     'Error while loading data:', err);
-            });
-            return 0;
+                return 1
+            }
+            return -1
         }
 
         try {
@@ -98,11 +99,28 @@
             AppendMenu(pop_if_ctl, String, {}, '登录', function () {
                 location.hash = '#/account/login/'
             });
+        } else {
+            AppendMenu(pop_if_ctl, String, {}, '个人主页', function () {
+                location.hash = '#/user/me/profile'
+            });
             AppendMenu(pop_if_ctl, 'separator');
+            AppendMenu(pop_if_ctl, String, {}, '修改昵称', function () {
+                location.hash = '#/account/edit/nickname'
+            });
+            AppendMenu(pop_if_ctl, String, {}, '修改头像', function () {
+                location.hash = '#/account/edit/avatar'
+            });
+            AppendMenu(pop_if_ctl, String, {}, '修改签名', function () {
+                location.hash = '#/account/edit/sign'
+            });
         }
+        AppendMenu(pop_if_ctl, 'separator');
+        AppendMenu(pop_if_ctl, String, {}, '退出登录', function () {
+            location.hash = '#/account/logout/confirm'
+        });
 
 
-        loginbtn.addEventListener('mouseover', function () {
+        loginbtn.addEventListener('click', function () {
             let rect = loginbtn.getBoundingClientRect();
 
             pop_if_ctl.lastElementChild.style.right = (document.documentElement.clientWidth - rect.right) + 'px';

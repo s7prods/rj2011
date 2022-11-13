@@ -1,0 +1,42 @@
+{
+    "top": {
+        "items": [
+            {
+                "title": "目录",
+                "author": "",
+                "time": "",
+                "des": "rj2011 的目录",
+                "href": "$index"
+            },
+            {
+                "title": "观点·爱情",
+                "author": "YJK",
+                "time": "2020",
+                "des": "现代诗人YJK的大作",
+                "href": "page/data/main/data/data/article/YJK/GD_Love.html"
+            },
+            {
+                "title": "论青春·回头",
+                "author": "YJK",
+                "time": "2022/4/1",
+                "des": "YJK新作",
+                "href": "page/data/main/data/data/article/YJK/lqcht.html"
+            },
+            {
+                "title": "期盼",
+                "author": "SJF",
+                "time": "2022/10/10",
+                "des": "画家SJF的处女座",
+                "href": "page/data/main/data/data/article/SJF/qipan.html"
+            }
+        ]
+    },
+    "random": {
+        "max_count": 0,
+        "items": [
+            {
+
+            }
+        ]
+    }
+}
