@@ -32,7 +32,6 @@
         ]
     },
     "random": {
-        "max_count": 0,
         "items": []
     }
 }

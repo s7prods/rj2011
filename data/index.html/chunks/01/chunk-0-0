@@ -6,6 +6,7 @@
         
         <span style="display: inline-block; width: 32px;"></span>
         <a href="#/" title="Homepage">主页</a>
+        <a href="javascript:pagereload()" title="Reload">刷新</a>
         <a href="#/index/" title="Index">目录</a>
         <a href="#/search/" title="Search">搜索</a>
         <a href="#/practice/?text=内卷" title="Incircle">内卷</a>

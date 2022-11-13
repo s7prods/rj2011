@@ -104,8 +104,7 @@
             contents_top.append(createCard('<b style="color:red">[置顶] </b>' + i.title, i.des, i.time, i.author, i.href))
         }
         const randarr = arrshuffle(data.random.items)
-        for (let _i = data.random.max_count; _i; _i--) {
-            const i = randarr[_i];
+        for (const i of randarr) {
             contents_it.append(createCard(i.title, i.des, i.time, i.author, i.href))
         }
     }

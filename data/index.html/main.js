@@ -329,6 +329,10 @@
             load_content({ event: ev });
         }
 
+        globalThis.pagereload = function () {
+            load_content({});
+        }
+
         function DCL() {
             setTimeout(pageload);
             window.addEventListener('hashchange', hashchange);
