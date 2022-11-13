@@ -185,6 +185,9 @@
             '/account/': function handler(data) {
                 alert('暂未实现')
             },
+            '/user/': function handler(data) {
+                alert('暂未实现')
+            },
             '/search/': function handler(data) {
                 return loadContentFromUrl('data/main/data/data/search/#' + data);
             },

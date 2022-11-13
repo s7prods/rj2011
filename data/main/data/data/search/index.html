@@ -33,14 +33,14 @@
     </form>
 
     <script>
-        function enableformitem(form) {
-            form.querySelectorAll('input,button').forEach(el=>el.disabled=true);
+        function enableformitem(form, bEnable = true) {
+            form.querySelectorAll('input,button').forEach(el=>el.disabled=!bEnable);
         }
 
         main.onsubmit = function (ev) {
             ev.preventDefault();
 
-            enableformitem(main);
+            enableformitem(main, false);
         }
     </script>
     

@@ -78,13 +78,19 @@
         card.tabIndex = 0;
         card.querySelector('.title').innerHTML = t;
         card.querySelector('.description').innerHTML = d;
+        card.querySelector('.description').title = d;
         card.querySelector('.author').innerHTML = a;
         card.querySelector('.time').innerHTML = m;
         card.querySelector('.x').onclick = function (ev) {
             ev.stopPropagation();
             if (x) return x(ev);
+            else card.remove();
         };
         card.onclick = function () {
+            if (l.startsWith('http')) {
+                window.open(l, '_blank');
+                return
+            }
             parent.postMessage({
                 "type": "redirect_hash",
                 "url": l
@@ -96,6 +102,11 @@
     function parse_content_data(data) {
         for (const i of data.top.items) {
             contents_top.append(createCard('<b style="color:red">[置顶] </b>' + i.title, i.des, i.time, i.author, i.href))
+        }
+        const randarr = arrshuffle(data.random.items)
+        for (let _i = data.random.max_count; _i; _i--) {
+            const i = randarr[_i];
+            contents_it.append(createCard(i.title, i.des, i.time, i.author, i.href))
         }
     }
 
@@ -114,8 +125,19 @@
             console.warn('Unable to load data in period', n, '\n', erro);
         }
 
-        period(n+1);
+        period(n + 1);
     })(0);
+
+    function arrshuffle(arr = []) {
+        var n = arr.length;
+
+        while (n--) {
+            var index = Math.floor(Math.random() * n);
+            [arr[index], arr[n]] = [arr[n], arr[index]];
+        }
+        return arr
+    }
+
 
 
 })(globalThis)
