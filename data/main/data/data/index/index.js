@@ -128,13 +128,9 @@
     })(0);
 
     function arrshuffle(arr = []) {
-        var n = arr.length;
-
-        while (n--) {
-            var index = Math.floor(Math.random() * n);
-            [arr[index], arr[n]] = [arr[n], arr[index]];
-        }
-        return arr
+        let newArr = arr.concat();
+        newArr.sort(() => Math.random() - 0.5);
+        return newArr;
     }
 
 
