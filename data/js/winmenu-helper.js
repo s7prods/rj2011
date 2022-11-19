@@ -72,6 +72,16 @@
         }
 
     }
+    function min() {
+        let $ = Infinity;
+        for (let _ of arguments) if(_<$)$=_
+        return $;
+    }
+    function max() {
+        let $ = -Infinity;
+        for (let _ of arguments) if(_>$)$=_
+        return $;
+    }
     window.TrackPopupMenu = function TrackPopupMenu(hMenu, x, y, flags = 0) {
 
         if (do_not_show_new_popup) return false;
@@ -85,9 +95,23 @@
             y = document.documentElement.clientHeight / 2 - hMenu.lastElementChild.clientHeight / 2;
         }
         if (typeof x === 'number')
-            hMenu.lastElementChild.style.left = x + 'px';
+            hMenu.lastElementChild.style[(flags && flags.align && flags.align.right) ? 'right' : 'left'] = x + 'px';
         if (typeof y === 'number')
-            hMenu.lastElementChild.style.top = y + 'px';
+            hMenu.lastElementChild.style[(flags && flags.align && flags.align.bottom) ? 'bottom' : 'top'] = y + 'px';
+        // 对越界进行处理
+    
+        {
+            const right = max(document.documentElement.offsetWidth, window.innerWidth);
+            const bottom = max(document.documentElement.offsetHeight, window.innerHeight);
+            if (parseInt(hMenu.lastElementChild.style.left) + hMenu.lastElementChild.clientWidth > right) {
+                hMenu.lastElementChild.style.left = '';
+                hMenu.lastElementChild.style.right = '3px';
+            }
+            if (parseInt(hMenu.lastElementChild.style.top) + hMenu.lastElementChild.clientHeight > bottom) {
+                hMenu.lastElementChild.style.top = '';
+                hMenu.lastElementChild.style.bottom = '3px';
+            }
+        }
 
         let _s = function () {
             return stop.apply(stop, arguments);

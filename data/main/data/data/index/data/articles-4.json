@@ -1,0 +1,31 @@
+{
+    "top": { "items": [] },
+    "random": {
+        "items": [
+            {
+                "title": "YJK - 人物档案",
+                "author": "YJK",
+                "time": "2022",
+                "des": "",
+                "href": "page/data/main/data/data/profiles/YJK/",
+                "tags": ["2011","人物档案","YJK"]
+            },
+            {
+                "title": "Melody - 人物档案",
+                "author": "",
+                "time": "2022",
+                "des": "",
+                "href": "page/data/main/data/data/profiles/Melody/",
+                "tags": ["2011","人物档案","Melody"]
+            },
+            {
+                "title": "翠翠 - 人物档案",
+                "author": "",
+                "time": "2022",
+                "des": "",
+                "href": "page/data/main/data/data/profiles/doublegreen/",
+                "tags": ["2011","人物档案","翠翠"]
+            }
+        ]
+    }
+}

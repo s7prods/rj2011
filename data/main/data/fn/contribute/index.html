@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>contribute</title>
+</head>
+<body>
+    <script>
+        if (location.hash.startsWith('#/contribute/new')) {
+            location = 'new.html';
+        }
+        if (location.hash.startsWith('#/contribute/activity-')) {
+            location = location.hash.replace('#/contribute/', '') + '.html';
+        }
+
+        document.write('请求无效')
+    </script>
+</body>
+</html>

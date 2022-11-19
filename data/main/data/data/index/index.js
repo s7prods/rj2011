@@ -1,6 +1,6 @@
 (function (window) {
 
-    if (localStorage.getItem('rj2011_data.agree_terms_of_use') === 'true') {
+    if (self.localStorage.getItem('rj2011_data.agree_terms_of_use') === 'true') {
         unofficial_tips.remove();
     } else {
         btn_continue.onclick = function (ev) {
@@ -18,7 +18,7 @@
             TrackPopupMenu(menu, rect.left, rect.bottom);
         }
         btn_icantunderstanden.onclick = function (ev) {
-            if (top.confirm('是否同意《用户协议》及《隐私政策》？')) {
+            if (confirm('是否同意《用户协议》及《隐私政策》？')) {
                 localStorage.setItem('rj2011_data.agree_terms_of_use', 'true');
                 unofficial_tips.style.height = 0 + 'px';
                 ev.target.parentElement.remove();
@@ -38,7 +38,8 @@
             let myDate_1 = Date.parse(date_1)
             let myDate_2 = Date.parse(date_2)
             // 将两个日期都转换为毫秒格式，然后做差
-            diffDate = Math.abs(myDate_1 - myDate_2) // 取相差毫秒数的绝对值
+            // diffDate = Math.abs(myDate_1 - myDate_2) // 取相差毫秒数的绝对值
+            diffDate = (myDate_1 - myDate_2) // 不取相差毫秒数的绝对值
             //diffDate = Number(myDate_1 - myDate_2) // 取相差毫秒数常数值
             totalDays = Math.floor(diffDate / (1000 * 3600 * 24)) // 向下取整
             return totalDays    // 相差的天数
@@ -64,7 +65,16 @@
     const contents_top = contents.querySelector('.top');
     const contents_it = contents.querySelector('.it');
 
-    function createCard(t, d, m, a, l, x = null) {
+    function notInterested(el, tag = null) {
+        el.remove();
+        // TODO: 大数据推荐
+        parent.postMessage({
+            api: 'showinfo',
+            args: ['将减少此类内容推荐', 'error']
+        }, location.origin)
+    }
+
+    function createCard(t, d, m, a, l, g, x = null) {
         let card = document.createElement('content-card');
         card.innerHTML = `
             <div class=title></div>
@@ -76,15 +86,31 @@
             </div>
         `;
         card.tabIndex = 0;
+        const dd = card.querySelector('.description');
         card.querySelector('.title').innerHTML = t;
-        card.querySelector('.description').innerHTML = d;
-        card.querySelector('.description').title = d;
+        dd.innerHTML = d;
+        dd.title = dd.innerText;
+        card.$_tags = g;
         card.querySelector('.author').innerHTML = a;
         card.querySelector('.time').innerHTML = m;
         card.querySelector('.x').onclick = function (ev) {
             ev.stopPropagation();
             if (x) return x(ev);
-            else card.remove();
+            else {
+                const menu = CreatePopupMenu();
+                AppendMenu(menu, String, {}, '对此内容不感兴趣', function () {
+                    notInterested(card);
+                });
+                AppendMenu(menu, 'separator');
+                if (card.$_tags) for (let i of card.$_tags)
+                AppendMenu(menu, String, {}, '不感兴趣: ' + i, function () {
+                    notInterested(card, i);
+                });
+                AppendMenu(menu, 'separator');
+                AppendMenu(menu, String, {}, '取消');
+                const rect = card.querySelector('.x').getBoundingClientRect();
+                TrackPopupMenu(menu, rect.left, rect.top);
+            }
         };
         card.onclick = function () {
             if (l.startsWith('http')) {
@@ -101,24 +127,36 @@
 
     function parse_content_data(data) {
         for (const i of data.top.items) {
-            contents_top.append(createCard('<b style="color:red">[置顶] </b>' + i.title, i.des, i.time, i.author, i.href))
+            contents_top.append(createCard('<b style="color:red">[置顶] </b>' + i.title, i.des, i.time, i.author, i.href, i.tags))
         }
-        const randarr = arrshuffle(data.random.items)
+        const randarr = arrshuffle(data.random.items, false)
         for (const i of randarr) {
-            contents_it.append(createCard(i.title, i.des, i.time, i.author, i.href))
+            contents_it.append(createCard(i.title, i.des, i.time, i.author, i.href, i.tags))
         }
     }
 
     (async function period(n) {
+        const dld = contents.querySelector('[data-loading-data]') || {};
         const path = `data/articles-${n}.json`;
         let resp = await fetch(path);
         if (!resp.ok) {
-            contents.querySelector('[data-loading-data]').remove();
+            dld.innerHTML = '没有更多了';
+            setTimeout(() => dld.remove(), 2000);
             return;
         }
 
         try {
-            parse_content_data(await resp.json());
+            const json = (await resp.json());
+            if (json.paused === true) {
+                dld.innerHTML = '点击加载更多'
+                dld.onclick = function () {
+                    dld.onclick = null
+                    dld.innerHTML = '正在加载'
+                    period(n + 1)
+                }
+                return
+            }
+            parse_content_data(json)
         }
         catch (erro) {
             console.warn('Unable to load data in period', n, '\n', erro);
@@ -127,8 +165,8 @@
         period(n + 1);
     })(0);
 
-    function arrshuffle(arr = []) {
-        let newArr = arr.concat();
+    function arrshuffle(arr = [], keep = true) {
+        let newArr = keep ? arr.concat() : arr;
         newArr.sort(() => Math.random() - 0.5);
         return newArr;
     }

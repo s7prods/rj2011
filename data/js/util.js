@@ -1,12 +1,24 @@
 
 
+function addCSS(css) {
+    let style = document.createElement('style');
+    style.innerHTML = css;
+    (document.head || document.documentElement).append(style);
+    return style;
+}
+
 function showinfo(text, level = 'info', time = 5000) {
     let el = document.createElement('div');
-    el.classList.add(myinfo_classn);
+    el.classList.add('cb06ab0e192b');
 
     el.setAttribute('data-level', level);
 
     el.innerText = text;
+    let closebtn = document.createElement('button');
+    closebtn.innerHTML = 'x';
+    closebtn.classList.add('x');
+    closebtn.onclick = el.remove.bind(el);
+    el.append(closebtn);
 
     (document.body || document.documentElement).append(el);
     var bh = el.clientHeight;
@@ -32,7 +44,43 @@ function showinfo(text, level = 'info', time = 5000) {
     return el;
 } // function showinfo
 
-function requireInput(prompt = '') {
+addCSS(`
+.cb06ab0e192b {
+    position: fixed;
+    top: -100%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    width: 60%;
+    text-align: left;
+    color: var(--color);
+    background: var(--background);
+    border: 1px solid;
+    border-color: var(--bordercolor);
+    border-radius: 10px;
+    z-index: 1048574;
+    padding: 10px;
+    
+    --color: black;
+    --background: white;
+    --bordercolor: black;
+}
+.cb06ab0e192b[data-level="info"] {
+    --background: lightgreen;
+    --bordercolor: green;
+}
+.cb06ab0e192b[data-level="warn"] {
+    --background: orange;
+    --bordercolor: #ffb100;
+}
+.cb06ab0e192b[data-level="error"] {
+    --background: #ffccbb;
+    --bordercolor: red;
+}
+.cb06ab0e192b .x {
+    float: right;
+}`);
+
+function requestInput(prompt = '') {
     return new Promise(function (resolve, reject) {
         let el = document.createElement('div');
         el.innerHTML =

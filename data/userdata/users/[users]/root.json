@@ -1,0 +1,12 @@
+{
+    "user.nickname": "[root]",
+    "user.auth.password": {
+        "encryption": "sha256",
+        "value": "-"
+    },
+    "user.tokens": {
+        "common-user-token": "--"
+    },
+    "profile.avatar": null,
+    "profile.page": null
+}

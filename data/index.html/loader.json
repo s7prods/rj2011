@@ -45,6 +45,12 @@
         },
         {
             "type": "js",
+            "url": "data/userdata/auth/auth.js",
+            "async": false,
+            "required": true
+        },
+        {
+            "type": "js",
             "url": "data/index.html/main.js",
             "async": false,
             "required": true

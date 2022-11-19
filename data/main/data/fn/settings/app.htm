@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设置</title>
+</head>
+
+<body>
+
+    <h1>设置</h1>
+
+    <form id="main">
+        <fieldset>
+            <legend>加载设置</legend>
+            <label>
+                <input type="checkbox" id="nouse_GILP">
+                不使用<i style="cursor:help;text-decoration:underline dotted;" onclick="return!window.open('//genshin.hoyoverse.com','_blank')">Genshin Impact</i>样式的加载进度条
+            </label>
+
+        </fieldset>
+
+        <br>
+
+
+        <div style="text-align:right;font-size:larger">
+            <button class="w32" type="submit" id="ok">确定</button>
+            <button class="w32" type="reset" id="cancel">取消</button>
+        </div>
+
+    </form>
+
+
+    <script>
+        function ___l() {
+            (rj2011_data.settings || (rj2011_data.settings = {}));
+            main.onsubmit = function (ev) {
+                ev.preventDefault();
+
+                try {
+                    (rj2011_data.settings || (rj2011_data.settings = {})).do_not_use_GILP = nouse_GILP.checked;
+
+                    rj2011_data.update;
+
+                    parent.postMessage({
+                        'api': 'showinfo',
+                        'args': ['设置已保存。\n部分设置可能需要刷新页面后生效']
+                    });
+                }
+                catch (error) {
+                    parent.postMessage({
+                        'api': 'showinfo',
+                        'args': ['无法保存设置: ' + error, 'error']
+                    });
+                }
+            }
+            cancel.onclick = function () {
+                parent.postMessage({
+                    'api': 'reload_content',
+                    'args': []
+                });
+            }
+
+            nouse_GILP.checked = rj2011_data.settings.do_not_use_GILP;
+        }
+
+        let _interval = setInterval(function () {
+            if (!window.rj2011_data) return
+            clearInterval(_interval)
+            ___l();
+        }, 200);
+       
+    </script>
+
+</body>
+
+</html>

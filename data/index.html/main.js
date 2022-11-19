@@ -48,11 +48,23 @@
                     if (el) el.remove()
                 }
             })
-            .then(async function () {
-                await LoadUserInfo()
+            .then(function () {
+                main.querySelector('#app_menubar_btn').onclick = function () {
+                    main.querySelector('#app_menubar').style.display = 'flex';
+                }
+                main.querySelector('#app_menubar').addEventListener('click', function (ev) {
+                    if (ev.target !== this) this.style.display = '';
+                }, { capture: true });
+
                 prog.value = 35
-                await InitUserComponents()
-                prog.value = 40
+            })
+            .then(async function () {
+                await data_init()
+                prog.value = 50
+
+                if ((rj2011_data.settings || {}).do_not_use_GILP) {
+                    addCSS(`.GenshinImpactLoadingProgressWrapperClass{display:none!important}`);
+                }
 
                 load_content({
                     callback: function () {
@@ -106,8 +118,7 @@
 
     {
         const title_base = 'rj2011';
-        const sandbox_options = 'allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts';
-        const ErrorSandboxViolation = Object.create({ toString() { return 'Sandbox Violation' } });
+        const sandbox_options = 'allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-scripts allow-same-origin';
 
         function load_content({ event = null, callback = null }) {
             let returnValue = (function () {
@@ -119,39 +130,67 @@
             if (callback) callback(returnValue);
             return returnValue;
         }
-
-        let ifrdoccheck = null;
         
         //globalThis.
-        let adjust_the_height_of_iframe = function () {
-            if (!cont) return false;
-            const el = cont.querySelector('iframe.content');
-            if (!el) return false;
-            try {
-                // check sandbox
-                if (String(el.sandbox) !== sandbox_options) {
-                    throw ErrorSandboxViolation;
-                }
-
-                // adjust the height of iframe
-                let height = el.contentWindow.document.documentElement.offsetHeight;
-                el.style.height = height + 'px';
-
-                // apply title for document
-                document.title = el.contentWindow.document.title + ' - ' + title_base;
-            }
-            catch (err) {
-                console.warn('Unable to set height of iframe.\n', (err));
+        let adjust_the_height_of_iframe = (function () {
+            const ErrorSandboxViolation = Object.create({ toString() { return 'Sandbox Violation' } });
+            const ErrorIframeOriginViolation = Object.create({ toString() { return 'Origin Violation' } });
+            const max_violation_count = 10;
+            let violation_count = 0;
+            return function () {
+                if (!cont) return false;
+                const el = cont.querySelector('iframe.content');
+                if (!el) return false;
                 try {
-                    if (err === ErrorSandboxViolation) throw err;
-                    el.contentWindow.location.origin
+                    // check sandbox
+                    if (String(el.sandbox) !== sandbox_options) {
+                        throw ErrorSandboxViolation;
+                    }
+
+                    if (el.contentWindow.location.origin !== globalThis.location.origin) {
+                        if (el.contentWindow.location.href !== 'about:blank')
+                            throw ErrorIframeOriginViolation;
+                    }
+
+                    // el.contentWindow.postMessage({
+                    //     'api': 'cors-helper',
+                    //     'data': {
+                    //         "option": "adjust_the_height_of_iframe"
+                    //     }
+                    // }, globalThis.location.origin);
+
+                
+                    // adjust the height of iframe
+                    let height = el.contentWindow.document.documentElement.offsetHeight;
+                    el.style.height = height + 'px';
+
+                    // apply title for document
+                    document.title = el.contentWindow.document.title + ' - ' + title_base;
+                
                 }
-                catch (err2) {
-                    console.error('[Security Error] Unable to access iframe, reloading document.\nError', err2);
-                    loadDefaultContent();
+                catch (err) {
+                    console.warn('Unable to set height of iframe.\n', (err), String(err));
+                    try {
+                        if (err === ErrorSandboxViolation) throw err;
+                        if (err === ErrorIframeOriginViolation) throw err;
+                        el.contentWindow.location.origin
+                    }
+                    catch (err2) {
+                        if (++violation_count > max_violation_count) {
+                            console.error(`[FATAL] Access violation for `, violation_count,
+                                `\nDocument load is blocked.`);
+                            cont.innerHTML = `<h1 style="color:red">致命错误</h1>
+                                <h3>Access violation</h3>
+                                <div>请尝试重新加载页面</div>`;
+                            return;
+                        }
+                        
+                        console.error('[Security Error] Unable to access iframe, reloading document.\nError', err2, String(err2));
+                        load_content({});
+                    }
                 }
             }
-        }
+        })();
         setInterval(adjust_the_height_of_iframe, 1000);
 
             
@@ -165,6 +204,7 @@
             },
             'styles': {
                 'data/main/css/general.css': null,
+                'data/main/css/w32ctl.css': null,
             }
         };
         const hash_data_assoc = {
@@ -180,19 +220,24 @@
                 return loadContentFromUrl('data/main/data/data/index/myindex/');
             },
             '/settings/': function handler(data) {
-                alert('暂未实现')
+                return loadContentFromUrl('data/main/data/fn/settings/app.htm');
             },
             '/account/': function handler(data) {
                 alert('暂未实现')
+                return false
             },
             '/user/': function handler(data) {
                 alert('暂未实现')
+                return false
+            },
+            '/contribute/': function handler(data) {
+                return loadContentFromUrl('data/main/data/fn/contribute/#' + data);
             },
             '/search/': function handler(data) {
-                return loadContentFromUrl('data/main/data/data/search/#' + data);
+                return loadContentFromUrl('data/main/data/fn/search/#' + data);
             },
             '/about/': function handler(data) {
-                return loadContentFromUrl('data/main/data/data/about/about.html#' + data);
+                return loadContentFromUrl('data/main/data/fn/about/about.html#' + data);
             },
             'index\u{FEFF}': function handler(data) {
                 return loadDefaultContent();
@@ -201,11 +246,22 @@
                 return loadContentFromUrl('data/main/data/data/index/404.html');
             },
         };
+        let prevHash = location.hash;
         function parseHashData(data = '') {
-            if (data === '' || data === '/') return hash_data_assoc['index\u{FEFF}'](data);
+            if (data === '' || data === '/') {
+                prevHash = location.hash;
+                return hash_data_assoc['index\u{FEFF}'](data);
+            }
             for (const i in hash_data_assoc) {
                 if (data.startsWith(i)) {
-                    return hash_data_assoc[i](data);
+                    let $r = hash_data_assoc[i](data);
+                    if ($r === false) {
+                        // rollback hash
+                        history.replaceState({}, '', prevHash);
+                        return false;
+                    }
+                    prevHash = location.hash;
+                    return $r;
                 }
             }
             return hash_data_assoc['default\u{FEFF}'](data);
@@ -247,6 +303,11 @@
                         t.rel = 'stylesheet';
                         t.href = content;
                         break;
+                    
+                    case 'script':
+                        t.src = content;
+                        t.async = false;
+                        break;
                 
                     default:
                         t.src = content;
@@ -264,21 +325,17 @@
             page_load_progress.value = max_value;
         }
 
-        let __isfirstcall_loadContentWithSandbox = true;
         async function loadContentWithSandbox(url, type = 'page') {
             if (!url) throw new TypeError('Invalid paramter');
             if (url.startsWith('http') || url.startsWith('//')) throw new Error('Security Error');
 
-            if (__isfirstcall_loadContentWithSandbox) {
-                __isfirstcall_loadContentWithSandbox = false;
-
-                page_load_progress.setSvgSize(32);
-            }
             cont.innerHTML = '';
             page_load_progress.value = 0;
             page_load_progress.show();
+            (main.querySelector('.page-loading-progress') || {}).hidden = false;
             let ifr = document.createElement('iframe');
             ifr.sandbox = sandbox_options;
+            ifr.title = 'Content';
             ifr.src = url;
             function ifr_onload(ifr) {
                 (async function (ifr) {
@@ -292,6 +349,9 @@
                         setTimeout(() => {
                             page_load_progress.hide();
                         }, 200);
+                        setTimeout(() => {
+                            (main.querySelector('.page-loading-progress') || {}).hidden = true;
+                        }, 1000);
                     }, getRandom(500, 1000));
                 })(ifr);
             };
@@ -313,15 +373,7 @@
             if (!(ev.data) || (ev.data.type !== 'redirect_hash')) return;
             if (!(ev.data.url)) return;
             
-            switch (ev.data.url) {
-                case '$index':
-                    location.hash = '#/index/';
-                    break;
-            
-                default:
-                    location.hash = '#/' + ev.data.url;
-                    break;
-            }
+            location.hash = '#/' + ev.data.url;
         })
 
 
@@ -345,6 +397,78 @@
         }
 
     }
+
+
+
+    const apis_allowed = {
+        'showinfo': showinfo,
+        'requestInput': requestInput,
+        'reload_content': pagereload,
+    }
+
+    window.addEventListener('message', function (ev) {
+        if (ev.origin !== location.origin) return;
+        if (!ev.data) return;
+        if (!(apis_allowed[ev.data.api])) return;
+        let ret;
+        try {
+            ret = apis_allowed[ev.data.api].apply(window, ev.data.args);
+        }
+        catch (error) {
+            return ev.source.postMessage({
+                'type': 'api_callback',
+                'result': null,
+                'why_result_is_null': String(error),
+                'callback_id': ev.data.id
+            }, location.origin);
+        }
+        if (Promise.prototype.isPrototypeOf(ret)) {
+            ret.then(function (data) {
+                ev.source.postMessage({
+                    'type': 'api_callback',
+                    'async': 'true',
+                    'result': data,
+                    'callback_id': ev.data.id
+                }, location.origin);
+            })
+            .catch(function (err) {
+                ev.source.postMessage({
+                    'type': 'api_callback',
+                    'async': true,
+                    'error': true,
+                    'result': err,
+                    'callback_id': ev.data.id
+                }, location.origin);
+            })
+            .catch(function (err) {
+                ev.source.postMessage({
+                    'type': 'api_callback',
+                    'async': true,
+                    'error': true,
+                    'error_type': 'unknown',
+                    'result': null,
+                    'callback_id': ev.data.id
+                }, location.origin);
+            })
+            return;
+        }
+
+        try {
+            ev.source.postMessage({
+                'type': 'api_callback',
+                'result': ret,
+                'callback_id': ev.data.id
+            }, location.origin);
+        }
+        catch (error) {
+            ev.source.postMessage({
+                'type': 'api_callback',
+                'result': null,
+                'why_result_is_null': String(error),
+                'callback_id': ev.data.id
+            }, location.origin);
+        }
+    });
 
 
 

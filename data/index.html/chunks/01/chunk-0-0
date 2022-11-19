@@ -3,12 +3,9 @@
         <a href="http://xxzrjzx.com/" target="_blank" style="color:blue">
             <rj-icon></rj-icon>
         </a>
-        
         <span style="display: inline-block; width: 32px;"></span>
-        <a href="#/" title="Homepage">主页</a>
-        <a href="javascript:pagereload()" title="Reload">刷新</a>
-        <a href="#/index/" title="Index">目录</a>
-        <a href="#/search/" title="Search">搜索</a>
-        <a href="#/practice/?text=内卷" title="Incircle">内卷</a>
-        <a href="#/settings/" title="Settings">设置</a>
 
+        <span id=app_menubar>
+            <a href="#/" title="Homepage">主页</a>
+            <a href="javascript:pagereload()" title="Reload">刷新</a>
+        

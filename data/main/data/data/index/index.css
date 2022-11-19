@@ -42,7 +42,7 @@ content-card > .title {
     font-weight: bold;
 }
 content-card > .description {
-    height: 3em;
+    height: 3rem;
     overflow: hidden;
 }
 content-card > .footer > .author,

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>搜索</title>
+    <style>
+        #main {
+            display: flex;
+            flex-direction: column;
+
+        }
+        #main :not(:nth-last-child(1)) {
+            margin-bottom: 5px;
+        }
+        #main #text {
+            padding: 10px;
+            border-radius: 5px;
+            background: #f0f0f0;
+            border: 1px solid #aaa;
+            font-size: larger;
+        }
+        #main button {
+            cursor: pointer;
+            padding: 5px;
+            font-size: larger;
+        }
+
+        #advsearch > label {
+            display: flex;
+            flex-direction: row;
+        }
+        #advsearch > label > input {
+            flex-grow: 1;
+        }
+
+        *[disabled] {
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+
+    <form id="main">
+        <input type="text" required id="text" placeholder="Search anything you want!">
+        <label><input type="checkbox" id="fullsearch"> 全文搜索 (非常非常慢,慎用)</label>
+        <label><input type="checkbox" id="advsearchenabled"> 高级搜索</label>
+        <fieldset id="advsearch" hidden>
+            <legend>高级搜索选项</legend>
+            <label>作者是 <input type="text" id="author"></label>
+            <label>URL中包含 <input type="text" id="inurl"></label>
+            
+            <label>附加信息包含 <input type="text" id="attached"></label>
+        </fieldset>
+        <button type="submit" id="req">Request a search</button>
+    </form>
+
+    <script>
+        function enableformitem(form, bEnable = true) {
+            form.querySelectorAll('input,button').forEach(el=>el.disabled=!bEnable);
+            form[(bEnable?'remove':'set')+'Attribute']('disabled', true);
+        }
+
+        main.onsubmit = function (ev) {
+            ev.preventDefault();
+
+            enableformitem(main, false);
+
+            req.innerHTML = '不会有人以为这个做完了吧';
+        }
+
+        advsearchenabled.oninput = function () {
+            enableformitem(advsearch, this.checked);
+            advsearch.hidden = !this.checked;
+        }
+        enableformitem(advsearch, false);
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,55 @@
+{
+    "users": {
+        "00000000-0000-0000-0000-000000000000": {
+            "user.id": 0,
+            "user.name": "root",
+            "user.auth.name": [],
+            "user.profile.location": "users/[users]/root.json",
+            "user.groups": [0]
+        },
+        "c51bac0d-a6fd-41ba-8b74-a30874c7aef8": {
+            "user.id": 13,
+            "user.name": "guest",
+            "user.auth.name": [],
+            "user.profile.location": "users/guest/user.json",
+            "user.groups": []
+        },
+        "f598f484-8125-4584-9520-b01f5917c2f1": {
+            "user.id": 24,
+            "user.name": "$shc07",
+            "user.auth.name": ["Delomy"],
+            "user.profile.location": "users/[users]/delomy.json",
+            "user.groups": []
+        }
+    },
+    "groups": {
+        "00000000-0000-0000-0000-000000000000": {
+            "gid": 0,
+            "group.name": "root"
+        },
+        "22722aac-460d-49f3-8c04-8a70aae87c58": {
+            "gid": 21,
+            "group.name": "admin"
+        },
+        "7da55bce-7d28-4548-9fad-82d3906a0f3e": {
+            "gid": 101,
+            "group.name": "学生"
+        },
+        "ace4769d-de76-4d39-8f48-ab984545e49b": {
+            "gid": 102,
+            "group.name": "老师"
+        },
+        "9ad02ecd-4405-4457-ae23-c91a59ade282": {
+            "gid": 103,
+            "group.name": "实习老师"
+        },
+        "27ff1b3e-520e-428d-a5d9-a93102f10fe2": {
+            "gid": 104,
+            "group.name": "***"
+        },
+        "b6868f22-e2a0-400a-b3cb-b9a33c39b974": {
+            "gid": 105,
+            "group.name": "作家"
+        }
+    }
+}

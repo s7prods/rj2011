@@ -218,7 +218,7 @@ This is deprecated. It just supports for old browsers. Do not use it in new proj
             let percent = (px - min) / area;
             let value = percent * (this.max - this.min) + this.min;
 
-            return value;
+            return isNaN(value) ? 0 : value;
         }
 
         getState() {
