@@ -22,14 +22,26 @@
         },
         {
             "type": "js",
-            "url": "data/js/util.js",
+            "url": "data/js/dependencies.js",
             "async": false,
             "required": true
         },
         {
             "type": "js",
-            "url": "data/js/winmenu-helper.js",
+            "url": "data/index.html/init.js",
             "async": false,
+            "required": true
+        },
+        {
+            "type": "js",
+            "url": "data/js/util.js",
+            "async": true,
+            "required": true
+        },
+        {
+            "type": "js",
+            "url": "data/js/winmenu-helper.js",
+            "async": true,
             "required": true
         },
         {
@@ -40,19 +52,19 @@
         {
             "type": "js",
             "url": "data/main/js/data_init.js",
-            "async": false,
+            "async": true,
             "required": true
         },
         {
             "type": "js",
             "url": "data/userdata/auth/auth.js",
-            "async": false,
+            "async": true,
             "required": true
         },
         {
             "type": "js",
             "url": "data/index.html/main.js",
-            "async": false,
+            "async": true,
             "required": true
         }
     ]

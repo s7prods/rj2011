@@ -73,7 +73,7 @@
         if (!ev.target.required) load_next_script();
     }
     function failedEvent_async(ev) {
-        reportProgress(divFromText(`<span style="color: red">[${datestr()}] 资源加载失败: ${ev.target.src || ev.target.href || ''}</span>`));
+        reportProgress(divFromText(`<span style="color: red">[${datestr()}]${ev.target.required?' [ERROR]':''} 资源加载失败: ${ev.target.src || ev.target.href || ''}</span>`));
     }
 
 

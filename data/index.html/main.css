@@ -171,5 +171,46 @@ a:any-link, a[href] {
     border: none;
 }
 
+#main #webpage-fullscreen-button {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 100001;
+    display: block;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    transition: .1s;
+    box-shadow: 0 0 10px #ccc;
+    cursor: pointer;
+
+    background-color: white;
+    background-image: url(fullscreen-expand.svg);
+    background-repeat: no-repeat;
+    background-position: 3px;
+    background-size: 32px;
+}
+#main #webpage-fullscreen-button:hover {
+    background-color: #F0f0f0;
+}
+#main #webpage-fullscreen-button.expanded {
+    background-image: url(fullscreen-shrink.svg);
+}
+
+#main main.expanded {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: inherit;
+    overflow: auto;
+    background-color: white;
+}
+#main main.expanded iframe {
+    height: 100%;
+}
+
 
 

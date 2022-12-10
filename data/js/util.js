@@ -159,3 +159,6 @@ async function LoadChunkEx({chunk_base, chunk_width = 1, chunk_height = 1, callb
 }
 
 
+if (window.dependencies) dependencies.done('util.js');
+
+

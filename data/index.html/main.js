@@ -2,6 +2,9 @@
     shc0743 rj2011 index.html main.js
 */
 
+dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
+.then(function () {
+
 (function () {
 
 
@@ -66,6 +69,11 @@
                     addCSS(`.GenshinImpactLoadingProgressWrapperClass{display:none!important}`);
                 }
 
+                (main.querySelector('#webpage-fullscreen-button') || {}).onclick = function () {
+                    main.querySelectorAll('#webpage-fullscreen-button,main')
+                        .forEach(el => el.classList.toggle('expanded'));
+                }
+
                 load_content({
                     callback: function () {
                         prog.value = 75;
@@ -118,7 +126,12 @@
 
     {
         const title_base = 'rj2011';
-        const sandbox_options = 'allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-scripts allow-same-origin';
+        const sandbox_options = (function () {
+            let _ = 'allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-downloads allow-scripts';
+            // if (location.hostname === '127.0.0.1')
+               _ += ' allow-same-origin';
+            return _;
+        })();
 
         function load_content({ event = null, callback = null }) {
             let returnValue = (function () {
@@ -143,29 +156,30 @@
                 if (!el) return false;
                 try {
                     // check sandbox
-                    if (String(el.sandbox) !== sandbox_options) {
+                    if (String(el.sandbox) !== sandbox_options && String(el.sandbox) !== sandbox_options_2) {
                         throw ErrorSandboxViolation;
                     }
 
-                    if (el.contentWindow.location.origin !== globalThis.location.origin) {
-                        if (el.contentWindow.location.href !== 'about:blank')
-                            throw ErrorIframeOriginViolation;
-                    }
+                    // if (el.contentWindow.location.origin !== globalThis.location.origin) {
+                    //     if (el.contentWindow.location.href !== 'about:blank')
+                    //         throw ErrorIframeOriginViolation;
+                    // }
 
-                    // el.contentWindow.postMessage({
-                    //     'api': 'cors-helper',
-                    //     'data': {
-                    //         "option": "adjust_the_height_of_iframe"
-                    //     }
-                    // }, globalThis.location.origin);
+                    el.contentWindow.postMessage({
+                        'api': 'cors-helper',
+                        "subapi": "adjust_the_height_of_iframe"
+                    }
+                    , '*'
+                    // , globalThis.location.origin
+                    );
 
                 
-                    // adjust the height of iframe
-                    let height = el.contentWindow.document.documentElement.offsetHeight;
-                    el.style.height = height + 'px';
-
-                    // apply title for document
-                    document.title = el.contentWindow.document.title + ' - ' + title_base;
+                    // // adjust the height of iframe
+                    // let height = el.contentWindow.document.documentElement.offsetHeight;
+                    // el.style.height = height + 'px';
+                    //
+                    // // apply title for document
+                    // document.title = el.contentWindow.document.title + ' - ' + title_base;
                 
                 }
                 catch (err) {
@@ -192,10 +206,31 @@
             }
         })();
         setInterval(adjust_the_height_of_iframe, 1000);
+        window.addEventListener('resize', function () {
+            adjust_the_height_of_iframe();
+        }); // (*)
+        window.addEventListener('message', function (ev) {
+            // if (ev.origin !== location.origin) return;
+            if (!ev.data) return;
+            if (ev.data.api !== 'cors-helper' || ev.data.subapi !== 'adjust_the_height_of_iframe') return;
+
+            if (!cont) return false;
+            const el = cont.querySelector('iframe.content');
+            if (!el) return false;
+
+            // adjust the height of iframe
+            let height = ev.data.data.height;
+            el.style.height = height + 'px';
+
+            // apply title for document
+            document.title = ev.data.data.title + ' - ' + title_base;
+
+        });
 
             
         const content_scripts = {
             'scripts': {
+                'data/main/js/cors-helper.js': null,
                 'data/js/util.js': null,
                 'data/js/winmenu-helper.js': null,
                 'data/main/js/data_init.js': null,
@@ -274,58 +309,153 @@
             return loadContentWithSandbox(url, type);
         }
 
-        async function loadContentScripts(ifr) {
-            const base_value = 20, max_value = page_load_progress.getHalfGeoValue();
-            const item_count = Reflect.ownKeys(content_scripts).length;
-            const step = (max_value - base_value) / item_count;
+        async function loadContentScripts(text = '') {
+            // const base_value = 20, max_value = page_load_progress.getHalfGeoValue();
+            // const item_count = Reflect.ownKeys(content_scripts).length;
+            // const step = (max_value - base_value) / item_count;
             const CONTINUE = ({});
-            async function exec(k, v, type) {
-                let content = content_scripts[k][v];
-                if (!content || !content.url) {
-                    try {
-                        const resp = await fetch(v);
-                        if (!resp.ok) {
-                            throw 'HTTP ' + resp.status + ' ' + resp.statusText;
+            const exec = (function () {
+                const divBuffer = document.createElement('div');
+                async function exec(k, v, type) {
+                    divBuffer.innerHTML = '';
+                    let content = content_scripts[k][v];
+                    if (!content || !content.url) {
+                        try {
+                            //
+                            /*const resp = await fetch(v);
+                            if (!resp.ok) {
+                                throw 'HTTP ' + resp.status + ' ' + resp.statusText;
+                            }
+                            content_scripts[k][v] = new Object();
+                            content_scripts[k][v].blob = await resp.blob();
+                            content_scripts[k][v].url = URL.createObjectURL(content_scripts[k][v].blob);
+                            content = content_scripts[k][v].url;*/
+                            
+                            let u = new URL(v, location);
+                            content_scripts[k][v] = new Object();
+                            content_scripts[k][v].url = u.href;
+                            content = u.href;
                         }
-                        content_scripts[k][v] = new Object();
-                        content_scripts[k][v].blob = await resp.blob();
-                        content_scripts[k][v].url = URL.createObjectURL(content_scripts[k][v].blob);
-                        content = content_scripts[k][v].url;
-                    }
-                    catch (error) {
-                        console.warn('Unable to load ', script, 'because', error);
-                        return CONTINUE;
-                    }
-                } else content = content.url;
-                const t = ifr.contentWindow.document.createElement(type);
-                switch (type) {
-                    case 'link':
-                        t.rel = 'stylesheet';
-                        t.href = content;
-                        break;
+                        catch (error) {
+                            console.warn('Unable to load ', v, 'because', error);
+                            return CONTINUE;
+                        }
+                    } else content = content.url;
+                    const t = document.createElement(type);
+                    switch (type) {
+                        case 'link':
+                            t.rel = 'stylesheet';
+                            t.href = content;
+                            break;
+                        
+                        case 'script':
+                            t.src = content;
+                            t.async = false;
+                            break;
                     
-                    case 'script':
-                        t.src = content;
-                        t.async = false;
-                        break;
-                
-                    default:
-                        t.src = content;
-                        break;
+                        default:
+                            t.src = content;
+                            break;
+                    }
+                    divBuffer.append(t);
+                    text += divBuffer.innerHTML;
                 }
-                t.src = content;
-                (ifr.contentWindow.document.head || ifr.contentWindow.document.documentElement).append(t);
-            }
+                return exec;
+            })();
             for (const script in content_scripts.scripts) {
                 await exec('scripts', script, 'script');
             }
             for (const style in content_scripts.styles) {
                 await exec('styles', style, 'link');
             }
-            page_load_progress.value = max_value;
+            // page_load_progress.value = max_value;
+            return text;
         }
 
-        async function loadContentWithSandbox(url, type = 'page') {
+        async function loadContentScripts_old(text) {
+            // const base_value = 20, max_value = page_load_progress.getHalfGeoValue();
+            // const item_count = Reflect.ownKeys(content_scripts).length;
+            // const step = (max_value - base_value) / item_count;
+            const CONTINUE = ({});
+            const exec = (function () {
+                const divBuffer = document.createElement('div');
+                async function exec(k, v, type) {
+                    divBuffer.innerHTML = '';
+                    let content = content_scripts[k][v];
+                    if (!content || !content.url) {
+                        try {
+                            const resp = await fetch(v);
+                            if (!resp.ok) {
+                                throw 'HTTP ' + resp.status + ' ' + resp.statusText;
+                            }
+                            content_scripts[k][v] = new Object();
+                            content_scripts[k][v].blob = await resp.blob();
+                            content_scripts[k][v].url = URL.createObjectURL(content_scripts[k][v].blob);
+                            content = content_scripts[k][v].url;
+                        }
+                        catch (error) {
+                            console.warn('Unable to load ', script, 'because', error);
+                            return CONTINUE;
+                        }
+                    } else content = content.url;
+                    const t = document.createElement(type);
+                    switch (type) {
+                        case 'link':
+                            t.rel = 'stylesheet';
+                            t.href = content;
+                            break;
+                        
+                        case 'script':
+                            t.src = content;
+                            t.async = false;
+                            break;
+                    
+                        default:
+                            t.src = content;
+                            break;
+                    }
+                    // divBuffer.append(t);
+                    // text += divBuffer.innerHTML;
+                    (text.contentWindow.document.body || text.contentWindow.document.documentElement).append(t);
+                }
+                return exec;
+            })();
+            for (const script in content_scripts.scripts) {
+                await exec('scripts', script, 'script');
+            }
+            for (const style in content_scripts.styles) {
+                await exec('styles', style, 'link');
+            }
+            // page_load_progress.value = max_value;
+            return text;
+        }
+
+        async function attach_text_into_html(text = '', source = '', tags_text = []) {
+            let result = [];
+            let succeed = false;
+            for (const $t of tags_text) {
+                const $index = source.indexOf($t);
+                if ($index < 0) continue;
+
+                const part1 = source.slice(0, $index + $t.length);
+                const part2 = source.slice($index + $t.length);
+
+                result.push(part1);
+                result.push(text);
+                result.push(part2);
+
+                succeed = true;
+                break;
+            }
+            if (!succeed) return source;
+            let blob = new Blob(result);
+            if (blob.text) return await blob.text();
+            return await (new Response(blob).text());
+        }
+
+        let abortctls = [];
+        let temp_data_urls = new Map();
+        async function loadContentWithSandbox(url) {
             if (!url) throw new TypeError('Invalid paramter');
             if (url.startsWith('http') || url.startsWith('//')) throw new Error('Security Error');
 
@@ -333,43 +463,128 @@
             page_load_progress.value = 0;
             page_load_progress.show();
             (main.querySelector('.page-loading-progress') || {}).hidden = false;
+
+            for (let i of abortctls) {
+                if (i) i.abort('Loading a new page');
+            }
+            abortctls = [];
+            for (let i in temp_data_urls) {
+                const d = temp_data_urls.get(i);
+                try {
+                    URL.revokeObjectURL(d);
+                } catch {}
+                temp_data_urls.delete(i);
+            }
+
+            // mode 
+            let mode = 'fetch-download';
+            
+            let $html_blob = await new Promise(function (resolve, reject) {
+                (async function () {
+                    let abortctl = new AbortController;
+                    abortctls.push(abortctl);
+                    let resp = await fetch(url, { signal: abortctl.signal });
+                    let reader = resp.body.getReader();
+                    const contentLength = +resp.headers.get('Content-Length');
+                    const type = resp.headers.get('Content-Type');
+                    if (type.includes('text/html')) {
+                        mode = 'html-document-load';
+                        resolve();
+                    }
+
+                    let receivedLength = 0;
+                    let chunks = [];
+                    let mprog = (main.querySelector('[data-id=data-download-details]') || {});
+                    while (true) {
+                        const { done, value } = await reader.read();
+                        if (done) break;
+                        chunks.push(value);
+                        receivedLength += value.length;
+                        
+                        // todo: update progress
+                        // console.log(`Received ${receivedLength} of ${contentLength}`)
+                        mprog.innerText = document.title = `${Math.floor((receivedLength/contentLength)*100*1000)/1000}% (${receivedLength} / ${contentLength})`;
+                    }
+                    mprog.innerText = '';
+                    document.title = ' - rj2011';
+                    abortctls = [];
+                    
+                    let blob = new Blob(chunks, { type: type });
+                    resolve(blob);
+                    return (blob);
+                })();
+            });
+            let $html_text = null;
+            let $dataurl;
             let ifr = document.createElement('iframe');
+            if (mode === 'fetch-download') {
+                // if ($html_blob.text) $html_text = await $html_blob.text();
+                // else $html_text = await (new Response($html_blob).text());
+                //
+                // {
+                //     let u = new URL(url, location);
+                //     let _Buffer = document.createElement('script');
+                //     _Buffer.innerHTML = `window.__resource_base__='${u}'`;
+                //     let texts = `<script>${_Buffer.innerHTML}</script>`;
+                //     texts += await loadContentScripts();
+                //     // console.log('texts=', texts);
+                //     $html_text = await attach_text_into_html(texts, $html_text, ['<head>', '<body>', '<html>']);
+                //     // console.log('$html_text=', $html_text)
+                // }
+                //
+                // let $blob = new Blob([$html_text], { type: $html_blob.type });
+                $dataurl = URL.createObjectURL($html_blob);
+                temp_data_urls.set(ifr, $dataurl);
+            }
+            
+
             ifr.sandbox = sandbox_options;
             ifr.title = 'Content';
-            ifr.src = url;
-            function ifr_onload(ifr) {
-                (async function (ifr) {
-                    page_load_progress.show();
-                    await loadContentScripts(ifr);
-                    setTimeout(adjust_the_height_of_iframe, 100);
-                    page_load_progress.value = page_load_progress.getHalfGeoValue();
+            ifr.src = (mode === 'fetch-download') ? $dataurl : url;
+            async function ifr_onload() {
+                if (mode === 'html-document-load') await loadContentScripts_old(ifr);
+                setTimeout(adjust_the_height_of_iframe, 100);
+                page_load_progress.value = page_load_progress.getHalfGeoValue();
+                setTimeout(() => {
+                    page_load_progress.value = 100;
+                    ifr.style.display = '';
+                    // if (mode === 'fetch-download') {
+                    //     URL.revokeObjectURL($dataurl);
+                    //     $dataurl = null;
+                    // }
                     setTimeout(() => {
-                        page_load_progress.value = 100;
-                        ifr.style.display = '';
-                        setTimeout(() => {
-                            page_load_progress.hide();
-                        }, 200);
-                        setTimeout(() => {
-                            (main.querySelector('.page-loading-progress') || {}).hidden = true;
-                        }, 1000);
-                    }, getRandom(500, 1000));
-                })(ifr);
+                        page_load_progress.hide();
+                    }, 200);
+                    setTimeout(() => {
+                        (main.querySelector('.page-loading-progress') || {}).hidden = true;
+                    }, 1000);
+                }, getRandom(500, 1000));
             };
+            if (mode === 'fetch-download') ifr.onload = ifr_onload;
+            ifr.onerror = function (ev) {
+                if (mode === 'fetch-download') {
+                    URL.revokeObjectURL($dataurl);
+                    $dataurl = null;
+                }
+                console.error('Failed to load content:', ev);
+            }
             ifr.classList.add('content');
             ifr.style.display = 'none';
             cont.append(ifr);
-            let old_doc = ifr.contentDocument;
-            let _interval = setInterval(function () {
-                let new_doc = ifr.contentDocument;
-                if (old_doc === new_doc) return;
-                clearInterval(_interval);
-                //ifr.style.display = '';
-                ifr_onload(ifr);
-            }, 250);
+            if (mode === 'html-document-load') {
+                let old_doc = ifr.contentDocument;
+                let _interval = setInterval(function () {
+                    let new_doc = ifr.contentDocument;
+                    if (old_doc === new_doc) return;
+                    clearInterval(_interval);
+                    //ifr.style.display = '';
+                    ifr_onload();
+                }, 250);
+            }
         }
 
         window.addEventListener('message', function (ev) {
-            if (ev.origin !== location.origin) return;
+            // if (ev.origin !== location.origin) return;
             if (!(ev.data) || (ev.data.type !== 'redirect_hash')) return;
             if (!(ev.data.url)) return;
             
@@ -399,6 +614,87 @@
     }
 
 
+    // storageAPI
+    {
+        window.addEventListener('message', function (ev) {
+            // if (ev.origin !== location.origin) return;
+            if (!ev.data) return;
+            if (ev.data.api !== 'cors-helper' || !String(ev.data.subapi).startsWith('storageAPI')) return;
+
+            switch (ev.data.subapi) {
+                case 'storageAPI.get':
+                    {
+                        let obj = JSON.parse(JSON.stringify(rj2011_data));
+                        ev.source.postMessage({
+                            api: ev.data.api,
+                            subapi: ev.data.subapi,
+                            callback: true,
+                            result: obj,
+                        }, '*');
+                    }
+                    break;
+                case 'storageAPI.set':
+                    try {
+                        rj2011_data = ev.data.data;
+                        ev.source.postMessage({
+                            api: ev.data.api,
+                            subapi: ev.data.subapi,
+                            callback: true,
+                            id: ev.data.id,
+                            result: ev.data.data,
+                        }, '*');
+                    }
+                    catch (err) {
+                        ev.source.postMessage({
+                            api: ev.data.api,
+                            subapi: ev.data.subapi,
+                            callback: true,
+                            id: ev.data.id,
+                            error: true,
+                            result: err,
+                        }, '*');
+                    }
+                    break;
+                case 'storageAPI.setItem':
+                    try {
+                        rj2011_data[ev.data.data.key] = ev.data.data.value;
+                        ev.source.postMessage({
+                            api: ev.data.api,
+                            subapi: ev.data.subapi,
+                            callback: true,
+                            id: ev.data.id,
+                            result: ev.data.data,
+                        }, '*');
+                    }
+                    catch (err) {
+                        ev.source.postMessage({
+                            api: ev.data.api,
+                            subapi: ev.data.subapi,
+                            callback: true,
+                            id: ev.data.id,
+                            error: true,
+                            result: err,
+                        }, '*');
+                    }
+                    break;
+            
+                default:
+                    ev.source.postMessage({
+                        api: ev.data.api,
+                        subapi: ev.data.subapi,
+                        callback: true,
+                        result: new Error('API not found'),
+                        error: true,
+                    }, '*');
+            }
+        });
+
+    }
+
+
+
+
+    // generic api
 
     const apis_allowed = {
         'showinfo': showinfo,
@@ -407,7 +703,7 @@
     }
 
     window.addEventListener('message', function (ev) {
-        if (ev.origin !== location.origin) return;
+        // if (ev.origin !== location.origin) return;
         if (!ev.data) return;
         if (!(apis_allowed[ev.data.api])) return;
         let ret;
@@ -473,4 +769,6 @@
 
 
 }());
+
+})
 

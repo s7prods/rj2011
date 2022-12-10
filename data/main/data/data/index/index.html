@@ -47,6 +47,23 @@
     <main>
         <content-scroll-card></content-scroll-card>
 
+        <div id="latest_update">
+            <fieldset>
+                <legend>最近更新</legend>
+                <div data-content>
+                    正在加载
+                    <script>
+                        fetch('data/ajax-latest-modified.html').then(v=>v.text())
+                        .then(function(d){
+                            document.querySelector('#latest_update [data-content]').innerHTML = d;
+                        })
+                    </script>
+                </div>
+            </fieldset>
+        </div>
+
+        <div style="margin:40px"></div>
+
         <div id="contents_wrapper">
             <div id="contents">
                 <div class="top"></div>
@@ -58,7 +75,7 @@
     </main>
     
     <link rel="stylesheet" href="index.css" />
-    <script src="index.js" defer></script>
+    <script src="index.js"></script>
 
 </body>
 </html>

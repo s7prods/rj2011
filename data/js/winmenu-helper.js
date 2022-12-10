@@ -290,3 +290,8 @@
     }
 
 })(window.exports || window);
+
+// added content to customize loading progress
+if (window.dependencies) dependencies.done('wm_helper')
+
+

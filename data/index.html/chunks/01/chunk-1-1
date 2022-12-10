@@ -2,3 +2,4 @@
 <div>Copyright 2011(c)2020-2021. All rights reserved.</div>
 <div><a href="#/about/website">About 2011 WebSite</a></div>
 </footer>
+<button id="webpage-fullscreen-button" title="网页全屏" aria-label="Full screen in the webpage"></button>

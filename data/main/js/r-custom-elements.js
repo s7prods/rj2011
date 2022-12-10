@@ -70,3 +70,5 @@
 
 }());
 
+if (window.dependencies) dependencies.done('r-cu-el');
+
