@@ -4,13 +4,14 @@
 
 
     class dependencies {
-        __done__ = {};
-        __promise__ = new Map();
-        __instanceId__ = null;
+        //__done__ = {};
+        //__promise__ = new Map();
 
         constructor() {
             this.__instanceId__ = Math.floor(Math.random()*1e12).toString();
-            
+            this.__done__ = {};
+            this.__promise__ = new Map();
+
         }
 
         reset() {
