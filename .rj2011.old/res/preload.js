@@ -134,6 +134,8 @@
         }
         for (let i = 0; i < _count_of_lastpath; ++i) _s += '../';
 
+        /*  */ _s += '.rj2011.old/';
+
         window.__users_loading_waiter = fetch(_s + 'data/auth_svc/Data/users.json').then(
             v => { return v.json() }, e => UserReportFetchError('无法加载数据: ' + e, 1)
         ).then(function (v) {

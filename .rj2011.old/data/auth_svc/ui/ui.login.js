@@ -246,5 +246,5 @@ window._tmp0 = (function () {
         });
     }
 });
-if (!__users_loading_waiter) { _tmp0(); delete _tmp0 }
+if (!window.__users_loading_waiter) { _tmp0(); delete _tmp0 }
 else { __users_loading_waiter.then(_tmp0); delete tmp0 };
