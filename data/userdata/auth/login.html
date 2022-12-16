@@ -5,8 +5,103 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>登录</title>
+    <style>.center{text-align:center}</style>
+    <link rel="stylesheet" href="../../main/css/my-button-group.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        #wrapper {
+            width: 100%;
+            height: auto;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        #main {
+            width: 400px;
+        }
+        @media screen and (max-width: 400px) {
+            #main {
+                width: 100%;
+            }
+        }
+
+        #main my-fieldset {
+            display: block;
+            margin: 10px 0;
+            padding: 0;
+            transition: all 0.2s;
+        }
+        #main my-fieldset > my-legend {
+            position: relative;
+            transition: all 0.2s;
+            top: 0;
+            left: 0;
+        }
+        #main my-fieldset > input {
+            box-sizing: border-box;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 10px;
+            border: 0;
+            border-bottom: 1px solid #ccc;
+        }
+        #main my-fieldset > input:valid {
+            border-bottom: 1px solid #2ba186;
+        }
+        #main my-fieldset:not(:focus-within):not(.has-value) > my-legend {
+            top: 1.5em;
+            left: 10px;
+        }
+    </style>
 </head>
 <body>
+
+    <div id="wrapper">
+        <form id="main">
+            <h1 class="center">登录</h1>
+
+            <my-fieldset>
+                <my-legend>账号</my-legend>
+                <input required type="text" id="username" autocomplete="off">
+            </my-fieldset>
+
+            <my-fieldset>
+                <my-legend>密码</my-legend>
+                <input required type="password" id="password" autocomplete="off">
+            </my-fieldset>
+
+            <br>
+
+            <div class="btn-group primary">
+                <button type="submit" class="primary">登录</button>
+                <button type="reset" onclick="parent.postMessage({api:'history.go',args:[-1]})">取消</button>
+            </div>
+        </form>
+</div>
+
+    <script>
+        const main = document.querySelector('#main');
+        main.addEventListener('input', function (ev) {
+            if (ev.target.tagName.toLowerCase() !== 'input') return;
+            if (ev.target.value) {
+                ev.target.parentElement.classList.add('has-value');
+            } else {
+                ev.target.parentElement.classList.remove('has-value');
+            }
+        }, { capture: true });
+        main.onsubmit = function (ev) {
+            ev.preventDefault();
+
+            enableformitem(main, false);
+            
+        }
+    </script>
     
 </body>
 </html>

@@ -40,18 +40,25 @@
         },
         {
             "type": "js",
-            "url": "data/js/winmenu-helper.js",
+            "url": "data/js/winmenu-helper-custom.js",
             "async": true,
             "required": true
         },
         {
             "type": "js",
             "url": "data/main/js/r-custom-elements.js",
-            "async": true
+            "async": true,
+            "required": true
         },
         {
             "type": "js",
             "url": "data/main/js/data_init.js",
+            "async": true,
+            "required": true
+        },
+        {
+            "type": "js",
+            "url": "data/userdata/user.js",
             "async": true,
             "required": true
         },

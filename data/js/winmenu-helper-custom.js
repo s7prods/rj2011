@@ -1,7 +1,6 @@
 (function (window) {
 
     var menu_class = 'WINCLASS-_32768';
-    var do_not_show_new_popup = false;
 
     window.CreatePopupMenu = function CreatePopupMenu() {
         let menu = document.createElement('div');
@@ -12,6 +11,11 @@
         backdrop.onmouseup = function (ev) {
             ev.preventDefault();
             ev.stopPropagation();
+
+            let event = document.createEvent("MouseEvent");
+            event.initMouseEvent('mouseup');
+            backdrop.parentElement.dispatchEvent(event);
+            return false;
 
             if (this.parentElement.classList.contains('close-confirm')) return false;
             let confirmMenu = CreatePopupMenu();
@@ -84,8 +88,6 @@
     }
     window.TrackPopupMenu = function TrackPopupMenu(hMenu, x, y, flags = 0) {
 
-        if (do_not_show_new_popup) return false;
-
         (document.documentElement).append(hMenu);
 
         if (x === 'center') {
@@ -152,9 +154,7 @@
 
             hMenu.remove();
 
-            do_not_show_new_popup = true;
             setTimeout(function () {
-                do_not_show_new_popup = false;
                 document.removeEventListener('contextmenu', _s, {
                     capture: true
                 });
@@ -295,5 +295,8 @@
     }
 
 })(window.exports || window);
+
+// added content to customize loading progress
+if (window.dependencies) dependencies.done('wm_helper')
 
 

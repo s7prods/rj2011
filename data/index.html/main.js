@@ -223,7 +223,8 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
             el.style.height = height + 'px';
 
             // apply title for document
-            document.title = ev.data.data.title + ' - ' + title_base;
+            const title = ev.data.data.title + ' - ' + title_base;
+            if (title !== document.title) document.title = title;
 
         });
 
@@ -232,7 +233,7 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
             'scripts': {
                 'data/main/js/cors-helper.js': null,
                 'data/js/util.js': null,
-                'data/js/winmenu-helper.js': null,
+                'data/js/winmenu-helper-custom.js': null,
                 'data/main/js/data_init.js': null,
                 'data/main/js/r-custom-elements.js': null,
                 'data/main/js/link-navi-helper.js': null,
@@ -258,15 +259,31 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
                 return loadContentFromUrl('data/main/data/fn/settings/app.htm');
             },
             '/account/': function handler(data) {
-                alert('暂未实现')
+                try {
+                    return accountHelper.Handlers.url.handle(data, loadContentFromUrl);
+                }
+                catch (error) {
+                    console.error(error);
+                    showinfo('[!] 找不到所需的数据\n[Internel Debug] ' + error, 'error');
+                }
                 return false
             },
             '/user/': function handler(data) {
-                alert('暂未实现')
+                showinfo('暂未实现', 'error', 0);
                 return false
             },
             '/contribute/': function handler(data) {
-                return loadContentFromUrl('data/main/data/fn/contribute/#' + data);
+                data = data.substring(12);
+                if (data.startsWith('new')) return loadContentFromUrl('data/main/data/fn/contribute/new.html#' + data);
+                if (data.startsWith('activity-')) return loadContentFromUrl((function () {
+                    const b = new URL(location);
+                    b.pathname = '/';
+                    const u = new URL(data, b);
+                    const m = new URL('data/main/data/fn/contribute/' + u.pathname.substring(1) + '.html', b);
+                    return m.pathname.substring(1);
+                })());
+
+                return showinfo('请求无效', 'error') && false;
             },
             '/search/': function handler(data) {
                 return loadContentFromUrl('data/main/data/fn/search/#' + data);
@@ -416,7 +433,7 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
                     }
                     // divBuffer.append(t);
                     // text += divBuffer.innerHTML;
-                    (text.contentWindow.document.body || text.contentWindow.document.documentElement).append(t);
+                    (text.contentWindow.document.head || text.contentWindow.document.documentElement).append(t);
                 }
                 return exec;
             })();
@@ -478,23 +495,56 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
 
             // mode 
             let mode = 'fetch-download';
+        
+            let mprog = (main.querySelector('[data-id=data-download-details]') || {});
+            let $html_blob = null;
+            let intProgId = 0;
             
-            let $html_blob = await new Promise(function (resolve, reject) {
-                (async function () {
+            {
+                mprog.innerHTML = '';
+                const el = document.createElement('div');
+                el.className = 'loading-progress-text';
+                el.dataset.value = 0;
+                el.style.left = 0;
+                mprog.append(el);
+                intProgId = setInterval(() => {
+                    if (Number(el.dataset.value) < 99) {
+                        el.dataset.value -= -1;
+                        el.style.left = el.dataset.value + '%';
+                    }
+                }, 50);
+            }
+
+            try { $html_blob = await new Promise(function (resolve, reject) {
+                let type = '';
+                {
+                    let abortctl = new AbortController;
+                    const prefetch = fetch(url, { signal: abortctl.signal, method: 'head' });
+                    prefetch.then(function (resp) {
+                        type = resp.headers.get('Content-Type');
+                        if (type.includes('text/html')) {
+                            mode = 'html-document-load';
+                            abortctl.abort();
+                            return resolve();
+                        }
+                        return main();
+                    }).catch(reject);
+                }
+                async function main() {
                     let abortctl = new AbortController;
                     abortctls.push(abortctl);
-                    let resp = await fetch(url, { signal: abortctl.signal });
+                    let resp;
+                    try {
+                        resp = await fetch(url, { signal: abortctl.signal });
+                    }
+                    catch (err) {
+                        return reject(err);
+                    }
                     let reader = resp.body.getReader();
                     const contentLength = +resp.headers.get('Content-Length');
-                    const type = resp.headers.get('Content-Type');
-                    if (type.includes('text/html')) {
-                        mode = 'html-document-load';
-                        resolve();
-                    }
 
                     let receivedLength = 0;
                     let chunks = [];
-                    let mprog = (main.querySelector('[data-id=data-download-details]') || {});
                     while (true) {
                         const { done, value } = await reader.read();
                         if (done) break;
@@ -512,8 +562,15 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
                     let blob = new Blob(chunks, { type: type });
                     resolve(blob);
                     return (blob);
-                })();
-            });
+                }
+            }); }
+            catch (error) {
+                if (/abort/i.test(String(error))) return null; // aborted
+                console.error('[ERROR] Error while loading content:', error);
+                mprog.innerHTML = '<div style="color:red"><b>加载失败</b></div><details><summary>错误信息</summary><div data-data></div></details>'
+                mprog.querySelector('div[data-data]').innerText = String(error);
+                return null;
+            }
             let $html_text = null;
             let $dataurl;
             let ifr = document.createElement('iframe');
@@ -542,11 +599,15 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
             ifr.title = 'Content';
             ifr.src = (mode === 'fetch-download') ? $dataurl : url;
             async function ifr_onload() {
-                if (mode === 'html-document-load') await loadContentScripts_old(ifr);
+                if (mode === 'html-document-load') {
+                    await loadContentScripts_old(ifr);
+                }
                 setTimeout(adjust_the_height_of_iframe, 100);
                 page_load_progress.value = page_load_progress.getHalfGeoValue();
                 setTimeout(() => {
                     page_load_progress.value = 100;
+                    if (intProgId) clearInterval(intProgId);
+                    mprog.innerHTML = '';
                     ifr.style.display = '';
                     // if (mode === 'fetch-download') {
                     //     URL.revokeObjectURL($dataurl);
@@ -566,6 +627,8 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
                     URL.revokeObjectURL($dataurl);
                     $dataurl = null;
                 }
+                if (intProgId) clearInterval(intProgId);
+                mprog.innerHTML = '';
                 console.error('Failed to load content:', ev);
             }
             ifr.classList.add('content');
@@ -587,6 +650,17 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
             // if (ev.origin !== location.origin) return;
             if (!(ev.data) || (ev.data.type !== 'redirect_hash')) return;
             if (!(ev.data.url)) return;
+
+            if (ev.data.blank) {
+                const options = ((blank) => {
+                    if (blank === 'blank') return undefined;
+                    if (blank === 'newWindow') return `width=${window.innerWidth},height=${window.innerHeight},left=${window.screenLeft},top=${window.screenTop}`;
+                })(ev.data.blank);
+
+                const url = new URL(location);
+                url.hash = '#/' + ev.data.url;
+                return window.open(url.href, '_blank', options);
+            }
             
             location.hash = '#/' + ev.data.url;
         })
@@ -619,7 +693,7 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
         window.addEventListener('message', function (ev) {
             // if (ev.origin !== location.origin) return;
             if (!ev.data) return;
-            if (ev.data.api !== 'cors-helper' || !String(ev.data.subapi).startsWith('storageAPI')) return;
+            if (ev.data.api !== 'cors-helper' || !String(ev.data.subapi).startsWith('storageAPI') || ev.data.callback) return;
 
             switch (ev.data.subapi) {
                 case 'storageAPI.get':
@@ -700,6 +774,7 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
         'showinfo': showinfo,
         'requestInput': requestInput,
         'reload_content': pagereload,
+        'history.go': history.go.bind(history),
     }
 
     window.addEventListener('message', function (ev) {
@@ -708,7 +783,7 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
         if (!(apis_allowed[ev.data.api])) return;
         let ret;
         try {
-            ret = apis_allowed[ev.data.api].apply(window, ev.data.args);
+            ret = apis_allowed[ev.data.api].apply(window, ev.data.args || []);
         }
         catch (error) {
             return ev.source.postMessage({
@@ -757,6 +832,7 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
             }, location.origin);
         }
         catch (error) {
+            if (ev.source)
             ev.source.postMessage({
                 'type': 'api_callback',
                 'result': null,

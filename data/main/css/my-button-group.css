@@ -1,0 +1,56 @@
+.btn-group {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.btn-group button {
+    margin: 0 10px;
+    padding: 10px;
+    flex: 1;
+}
+.btn-group.primary button {
+    font-size: large;
+    transition: 0.2s;
+    border: 1px solid;
+    color: var(--color);
+    background-color: var(--backgroundColor);
+    border-color: var(--borderColor);
+    border-radius: 5px;
+
+    /* GitHub buttons style */
+    --color: #24292f;
+    --backgroundColor: #f6f8fa;
+    --borderColor: rgba(27,31,36,0.15);
+}
+.btn-group.primary button.primary {
+    --color: #ffffff;
+    --backgroundColor: #2da44e;
+    --borderColor: rgba(27,31,36,0.15);
+}
+.btn-group.primary button:hover {
+    --backgroundColor: #f3f4f6;
+}
+.btn-group.primary button.primary:hover {
+    --backgroundColor: #2c974b;
+}
+.btn-group.primary button:disabled {
+    opacity: 0.5;
+}
+/* .btn-group.primary button:disabled::after {
+    content: "";
+    cursor: not-allowed;
+    display: inline-block;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    top: -50%;
+    background: #fff;
+    opacity: 0.5;
+} */
+.btn-group button:nth-child(1) {
+    margin-left: 0;
+}
+.btn-group button:nth-last-child(1) {
+    margin-right: 0;
+}

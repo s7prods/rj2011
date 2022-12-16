@@ -170,6 +170,8 @@
         })
     }
 
+    // disable this feature
+    if (0)
     window.addEventListener('DOMContentLoaded', function () {
         UpdateResourcePath();
         function callback(n) {

@@ -57,10 +57,6 @@
     </form>
 
     <script>
-        function enableformitem(form, bEnable = true) {
-            form.querySelectorAll('input,button').forEach(el=>el.disabled=!bEnable);
-            form[(bEnable?'remove':'set')+'Attribute']('disabled', true);
-        }
 
         main.onsubmit = function (ev) {
             ev.preventDefault();

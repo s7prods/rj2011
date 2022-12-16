@@ -112,16 +112,43 @@
                 TrackPopupMenu(menu, rect.left, rect.top);
             }
         };
-        card.onclick = function () {
+        card.onclick = function (_) {
             if (l.startsWith('http')) {
                 window.open(l, '_blank');
                 return
             }
+
             parent.postMessage({
                 "type": "redirect_hash",
-                "url": l
+                "url": l,
+                "blank": (_ === 'open_in_blank' ? 'blank' : (_ === 'open_in_new_window' ? 'newWindow' : false)),
             }, location.origin);
         };
+        card.onkeydown = function (ev) {
+            if (ev.key.toLowerCase().includes('enter')) return this.onclick(ev);
+        };
+        card.onmousedown = function (ev) {
+            if (ev.button === 1) return this.onclick('open_in_blank') && false;
+        }
+        card.oncontextmenu = function (ev) {
+            ev.preventDefault();
+            
+            const menu = CreatePopupMenu();
+            AppendMenu(menu, String, {}, '打开 (Enter)', function () {
+                card.onclick();
+            });
+            AppendMenu(menu, 'separator');
+            AppendMenu(menu, String, {}, '在新标签页中打开', function () {
+                card.onclick('open_in_blank');
+            });
+            AppendMenu(menu, String, {}, '在新窗口中打开', function () {
+                card.onclick('open_in_new_window');
+            });
+            AppendMenu(menu, 'separator');
+            AppendMenu(menu, String, {}, '取消 (Esc)');
+
+            TrackPopupMenu(menu, ev.x, ev.y);
+        }
         return card;
     }
 

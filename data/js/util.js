@@ -21,6 +21,7 @@ function showinfo(text, level = 'info', time = 5000) {
     el.append(closebtn);
 
     (document.body || document.documentElement).append(el);
+
     var bh = el.clientHeight;
     var bt = -bh;
     var _i1 = setInterval(function () {
@@ -30,6 +31,9 @@ function showinfo(text, level = 'info', time = 5000) {
             clearInterval(_i1);
         }
     }, 10);
+    
+    if (!time) return el;
+    
     setTimeout(function () {
         bt = 10;
         var _i2 = setInterval(function () {
@@ -156,6 +160,11 @@ async function LoadChunkEx({chunk_base, chunk_width = 1, chunk_height = 1, callb
 
     return new Blob(chunkresult);
 
+}
+
+function enableformitem(form, bEnable = true) {
+    form.querySelectorAll('input,button').forEach(el=>el.disabled=!bEnable);
+    form[(bEnable?'remove':'set')+'Attribute']('disabled', true);
 }
 
 
