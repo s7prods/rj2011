@@ -661,6 +661,8 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
                 url.hash = '#/' + ev.data.url;
                 return window.open(url.href, '_blank', options);
             }
+
+            if (String(ev.data.url).startsWith('#')) return location.hash = ev.data.url;
             
             location.hash = '#/' + ev.data.url;
         })

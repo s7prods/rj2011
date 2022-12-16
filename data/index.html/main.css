@@ -54,11 +54,11 @@ a:any-link, a[href] {
     background: transparent;
     --svgsize: 30%;
 }
-@media screen and (max-width: 399px) {
+/* @media screen and (max-width: 399px) {
     #main .page-loading-progress {
         width: 105px;
     }
-}
+} */
 
 #main .popup {
     position: fixed;

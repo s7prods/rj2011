@@ -96,12 +96,14 @@
                     if (!url) throw new TypeError();
 
                     // todo: 登录判断
-                    if (url.startsWith('/account/login')) {
-                        return loader('data/userdata/auth/login.html');
+                    if (url.startsWith('/account/login/')) {
+                        return loader('data/userdata/auth/login.html#' + url);
                     }
                     if (url.startsWith('/account/logout/confirm')) {
-                        if (confirm('确定退出登录?')) location.hash = '#/account/logout/';
-                        return false;
+                        return loader('data/userdata/auth/logout_confirm.html#' + url);
+                    }
+                    if (url.startsWith('/account/logout/')) {
+                        return loader('data/userdata/auth/logout.html#' + url);
                     }
 
                     throw new Error('请求无效');

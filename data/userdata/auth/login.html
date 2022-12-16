@@ -8,6 +8,17 @@
     <style>.center{text-align:center}</style>
     <link rel="stylesheet" href="../../main/css/my-button-group.css">
     <style>
+        question-card{display:block;margin-top:10px;}
+        question-card > .q::before {
+            content: "Q: ";
+            font-weight: bold;
+        }
+        question-card > .a::before {
+            content: "A: ";
+            font-weight: bold;
+        }
+    </style>
+    <style>
         body {
             margin: 0;
             padding: 0;
@@ -18,15 +29,30 @@
 
             display: flex;
             flex-direction: column;
-            align-items: center;
+            /* align-items: center; */
             justify-content: center;
+            align-items: stretch;
+
+            word-break: break-all;
+            word-wrap: break-word;
         }
         #main {
             width: 400px;
         }
-        @media screen and (max-width: 400px) {
+        @media screen and (max-width: 500px) {
             #main {
                 width: 100%;
+            }
+        }
+        #userlist { margin-top: 50px; box-sizing: border-box; }
+        @media screen and (min-width: 500px) {
+            #wrapper {
+                flex-direction: row;
+            }
+            #userlist {
+                margin-top: 0; 
+                margin-left: 10px; 
+                width: 200px;
             }
         }
 
@@ -58,6 +84,28 @@
             top: 1.5em;
             left: 10px;
         }
+
+        #main button.loading::before {
+            content: "";
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            box-sizing: border-box;
+            vertical-align: middle;
+            margin-right: 5px;
+            border: 2px solid transparent;
+            border-radius: 50%;
+            border-top-color: var(--color);
+            animation: spin linear 1s infinite;
+        }
+        @keyframes spin {
+            from {
+                transform: rotate(0deg); /* 直接用 rotate 属性兼容性不好 */
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 <body>
@@ -71,21 +119,49 @@
                 <input required type="text" id="username" autocomplete="off">
             </my-fieldset>
 
-            <my-fieldset>
+            <my-fieldset data-category="login-by-password" style="display: none">
                 <my-legend>密码</my-legend>
-                <input required type="password" id="password" autocomplete="off">
+                <input type="password" id="password" autocomplete="off">
             </my-fieldset>
 
             <br>
 
             <div class="btn-group primary">
-                <button type="submit" class="primary">登录</button>
+                <button type="submit" class="primary" id="next">下一步</button>
                 <button type="reset" onclick="parent.postMessage({api:'history.go',args:[-1]})">取消</button>
             </div>
         </form>
-</div>
 
-    <script>
+        <div id="userlist">
+            <fieldset style="min-width:calc(100%-4px);height:100%;box-sizing:border-box">
+                <legend>或选择一个用户...</legend>
+                <form id="userlist_choose">
+                    <select style="box-sizing:border-box;width:100%" id="userlist_content"><option>正在加载</option></select>
+                    <button style="box-sizing:border-box;width:100%;margin-top:10px;" type="submit">确定</button>
+                </form>
+            </fieldset>
+        </div>
+    </div>
+
+    <br>
+
+    <fieldset>
+        <legend>常见问题</legend>
+        <div>
+            <question-card>
+                <div class="q">如何登录？</div>
+                <div class="a">输入您的账号，然后按提示操作。</div>
+            </question-card>
+        </div>
+    </fieldset>
+
+    <script>(function () {
+        function showinfo(a,b,c) {
+            return parent.postMessage({
+                api: 'showinfo',
+                args: [a, b, c]
+            })
+        }
         const main = document.querySelector('#main');
         main.addEventListener('input', function (ev) {
             if (ev.target.tagName.toLowerCase() !== 'input') return;
@@ -99,9 +175,40 @@
             ev.preventDefault();
 
             enableformitem(main, false);
-            
+            next.classList.add('loading');
+
+            fetch('../users.json').then(v=>v.json())
+            .then(function (data) {
+                
+                showinfo('你莫猴，这个功能还没逮完', 'warn');
+                
+            })
+            .catch(function (err) {
+                enableformitem(main, true);
+                next.classList.remove('loading');
+
+                showinfo(`数据加载失败: ${err}`, 'error')
+            });
         }
-    </script>
+        userlist_choose.onsubmit = function (ev) {
+            ev.preventDefault();
+            if (main.getAttribute('disabled')) return !showinfo('此时无法处理此请求。', 'error');
+            enableformitem(this, false);
+            if (username.value = userlist_content.value) username.parentElement.classList.add('has-value');
+            setTimeout(f => enableformitem(f, true), 2000, this);
+        }
+        fetch('users-shown-in-list.json').then(v => v.json())
+        .then(function (d) {
+            userlist_content.innerHTML = '<option>请选择</option>';
+            for (let i of d) {
+                let el = document.createElement('option');
+                el.innerHTML = i;
+                el.value = i;
+                userlist_content.append(el);
+            }
+        })
+        .catch(e => { showinfo(`用户数据加载失败: ${e}`, 'error') });
+    }())</script>
     
 </body>
 </html>

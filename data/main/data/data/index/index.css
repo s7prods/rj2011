@@ -44,6 +44,7 @@ content-card > .title {
 content-card > .description {
     height: 3rem;
     overflow: hidden;
+    text-overflow: ellipsis;
 }
 content-card > .footer > .author,
 content-card > .footer > .time {

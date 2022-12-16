@@ -163,7 +163,7 @@ async function LoadChunkEx({chunk_base, chunk_width = 1, chunk_height = 1, callb
 }
 
 function enableformitem(form, bEnable = true) {
-    form.querySelectorAll('input,button').forEach(el=>el.disabled=!bEnable);
+    form.querySelectorAll('input,button,select').forEach(el=>el.disabled=!bEnable);
     form[(bEnable?'remove':'set')+'Attribute']('disabled', true);
 }
 
