@@ -36,6 +36,11 @@
                 <td>Publish on</td>
                 <td>GitHub Pages</td>
             </tr>
+
+            <tr>
+                <td>《用户协议》和《隐私政策》</td>
+                <td><button onclick="storageAPI.setItem('acceptedEULA.u','').then(()=>storageAPI.setItem('acceptedEULA.p','').then(()=>parent.postMessage({api:'reLoad'},'*')))">查看</button></td>
+            </tr>
         </tbody>
     </table>
 

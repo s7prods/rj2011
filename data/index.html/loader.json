@@ -3,23 +3,13 @@
         {
             "type": "css",
             "url": "data/index.html/main.css"
+        },
+        {
+            "type": "css",
+            "url": "data/main/css/my-button-group.css"
         }
     ],
     "scripts": [
-        {
-            "type": "js",
-            "url": "data/js/progress_2.js",
-            "async": false,
-            "required": false,
-            "condition": "try{eval(`class _{#a=0;$(){return true}}new(_)().$();`);}catch(_){false}"
-        },
-        {
-            "type": "js",
-            "url": "data/js/progress_2_nopriv.js",
-            "async": false,
-            "required": false,
-            "condition": "try{eval(`class _{#a=0;$(){return false}}new(_)().$();`);}catch(_){true}"
-        },
         {
             "type": "js",
             "url": "data/js/dependencies.js",
@@ -31,6 +21,28 @@
             "url": "data/index.html/init.js",
             "async": false,
             "required": true
+        },
+        {
+            "type": "js",
+            "url": "data/main/data/EULA/EULA.js",
+            "async": true,
+            "required": true
+        },
+        {
+            "type": "js",
+            "url": "data/js/progress_2.js",
+            "async": true,
+            "required": true,
+            "condition": "try{eval(`class _{#a=0;$(){return true}}new(_)().$();`);}catch(_){false}",
+            "onload": "dependencies.done('custom-progressbar')"
+        },
+        {
+            "type": "js",
+            "url": "data/js/progress_2_nopriv.js",
+            "async": true,
+            "required": true,
+            "condition": "try{eval(`class _{#a=0;$(){return false}}new(_)().$();`);}catch(_){true}",
+            "onload": "dependencies.done('custom-progressbar')"
         },
         {
             "type": "js",

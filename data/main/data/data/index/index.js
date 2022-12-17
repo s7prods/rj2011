@@ -1,35 +1,40 @@
 (function (window) {
 
-    if (self.localStorage.getItem('rj2011_data.agree_terms_of_use') === 'true') {
-        unofficial_tips.remove();
-    } else {
-        btn_continue.onclick = function (ev) {
-            let rect = ev.target.getBoundingClientRect();
-            let menu = CreatePopupMenu();
-            AppendMenu(menu, String, {}, 'Agree', function () {
-                localStorage.setItem('rj2011_data.agree_terms_of_use', 'true');
-                unofficial_tips.style.height = 0 + 'px';
-                ev.target.parentElement.remove();
-            });
-            AppendMenu(menu, String, {}, 'Disagree', function () {
-                localStorage.setItem('rj2011_data.agree_terms_of_use', 'false');
-                top.location = Math.random();
-            });
-            TrackPopupMenu(menu, rect.left, rect.bottom);
-        }
-        btn_icantunderstanden.onclick = function (ev) {
-            if (confirm('是否同意《用户协议》及《隐私政策》？')) {
-                localStorage.setItem('rj2011_data.agree_terms_of_use', 'true');
-                unofficial_tips.style.height = 0 + 'px';
-                ev.target.parentElement.remove();
-            } else {
-                localStorage.setItem('rj2011_data.agree_terms_of_use', 'false');
-                location = Math.random();
+    setTimeout(async function () {
+        const storage = await storageAPI.getStorage();
+
+        if (storage.agree_terms_of_use === 'true') {
+            unofficial_tips.remove();
+        } else {
+            btn_continue.onclick = function (ev) {
+                let rect = ev.target.getBoundingClientRect();
+                let menu = CreatePopupMenu();
+                AppendMenu(menu, String, {}, 'Agree', function () {
+                    storageAPI.setItem('agree_terms_of_use', 'true');
+                    unofficial_tips.style.height = 0 + 'px';
+                    ev.target.parentElement.remove();
+                });
+                AppendMenu(menu, String, {}, 'Disagree', function () {
+                    storageAPI.setItem('agree_terms_of_use', 'false');
+                    top.location = Math.random();
+                });
+                TrackPopupMenu(menu, rect.left, rect.bottom);
+            }
+            btn_icantunderstanden.onclick = function (ev) {
+                if (confirm('是否同意《用户协议》及《隐私政策》？')) {
+                    storageAPI.setItem('agree_terms_of_use', 'true');
+                    unofficial_tips.style.height = 0 + 'px';
+                    ev.target.parentElement.remove();
+                } else {
+                    storageAPI.setItem('agree_terms_of_use', 'false');
+                    location = Math.random();
+                }
             }
         }
-    }
 
 
+
+    }, 1000);
     {
         function getDiffDay(date_1, date_2) {
              // https://blog.csdn.net/weixin_45891332/article/details/125652822

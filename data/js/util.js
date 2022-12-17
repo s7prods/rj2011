@@ -1,10 +1,17 @@
 
 
-function addCSS(css) {
+function addCSS(css, el = null) {
+    if (el == null) el = (document.head || document.documentElement);
     let style = document.createElement('style');
     style.innerHTML = css;
-    (document.head || document.documentElement).append(style);
+    el.append(style);
     return style;
+}
+
+function applyStyleToElement(el, style) {
+    for (let i in style) {
+        el.style[i] = style[i];
+    }
 }
 
 function showinfo(text, level = 'info', time = 5000) {

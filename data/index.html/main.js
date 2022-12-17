@@ -2,7 +2,7 @@
     shc0743 rj2011 index.html main.js
 */
 
-dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
+dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el', 'custom-progressbar')
 .then(function () {
 
 (function () {
@@ -41,8 +41,11 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
                 }());
             })
             .then(function (chunk_data) {
-                main.append(divFromText(chunk_data));
-                cont = document.querySelector('#main main');
+                const div1 = document.createElement('div');
+                div1.innerHTML = chunk_data;
+                div1.classList.add('container');
+                main.append(div1);
+                cont = main.querySelector('main');
                 prog.value = 30;
             })
             .then(function () {
@@ -169,7 +172,7 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
                         'api': 'cors-helper',
                         "subapi": "adjust_the_height_of_iframe"
                     }
-                    , '*'
+                    , location.origin
                     // , globalThis.location.origin
                     );
 
@@ -210,7 +213,7 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
             adjust_the_height_of_iframe();
         }); // (*)
         window.addEventListener('message', function (ev) {
-            // if (ev.origin !== location.origin) return;
+            if (ev.origin !== location.origin) return;
             if (!ev.data) return;
             if (ev.data.api !== 'cors-helper' || ev.data.subapi !== 'adjust_the_height_of_iframe') return;
 
@@ -232,6 +235,7 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
         const content_scripts = {
             'scripts': {
                 'data/main/js/cors-helper.js': null,
+                'data/js/dependencies.js': null,
                 'data/js/util.js': null,
                 'data/js/winmenu-helper-custom.js': null,
                 'data/main/js/data_init.js': null,
@@ -510,7 +514,7 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
                 intProgId = setInterval(() => {
                     if (Number(el.dataset.value) < 99) {
                         el.dataset.value -= -1;
-                        el.style.left = el.dataset.value + '%';
+                        el.style.left = `calc(${el.dataset.value}% - 2em)`;
                     }
                 }, 50);
             }
@@ -647,7 +651,7 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
         }
 
         window.addEventListener('message', function (ev) {
-            // if (ev.origin !== location.origin) return;
+            if (ev.origin !== location.origin) return;
             if (!(ev.data) || (ev.data.type !== 'redirect_hash')) return;
             if (!(ev.data.url)) return;
 
@@ -693,7 +697,7 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
     // storageAPI
     {
         window.addEventListener('message', function (ev) {
-            // if (ev.origin !== location.origin) return;
+            if (ev.origin !== location.origin) return;
             if (!ev.data) return;
             if (ev.data.api !== 'cors-helper' || !String(ev.data.subapi).startsWith('storageAPI') || ev.data.callback) return;
 
@@ -706,19 +710,20 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
                             subapi: ev.data.subapi,
                             callback: true,
                             result: obj,
-                        }, '*');
+                        }, ev.source.origin);
                     }
                     break;
                 case 'storageAPI.set':
                     try {
                         rj2011_data = ev.data.data;
+                        rj2011_data.update;
                         ev.source.postMessage({
                             api: ev.data.api,
                             subapi: ev.data.subapi,
                             callback: true,
                             id: ev.data.id,
                             result: ev.data.data,
-                        }, '*');
+                        }, ev.source.origin);
                     }
                     catch (err) {
                         ev.source.postMessage({
@@ -728,19 +733,20 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
                             id: ev.data.id,
                             error: true,
                             result: err,
-                        }, '*');
+                        }, ev.source.origin);
                     }
                     break;
                 case 'storageAPI.setItem':
                     try {
                         rj2011_data[ev.data.data.key] = ev.data.data.value;
+                        rj2011_data.update;
                         ev.source.postMessage({
                             api: ev.data.api,
                             subapi: ev.data.subapi,
                             callback: true,
                             id: ev.data.id,
                             result: ev.data.data,
-                        }, '*');
+                        }, ev.source.origin);
                     }
                     catch (err) {
                         ev.source.postMessage({
@@ -750,7 +756,7 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
                             id: ev.data.id,
                             error: true,
                             result: err,
-                        }, '*');
+                        }, ev.source.origin);
                     }
                     break;
             
@@ -761,7 +767,7 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
                         callback: true,
                         result: new Error('API not found'),
                         error: true,
-                    }, '*');
+                    }, ev.source.origin);
             }
         });
 
@@ -773,14 +779,16 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
     // generic api
 
     const apis_allowed = {
-        'showinfo': showinfo,
-        'requestInput': requestInput,
-        'reload_content': pagereload,
-        'history.go': history.go.bind(history),
+        'showinfo': globalThis.showinfo,
+        'requestInput': globalThis.requestInput,
+        'reload_content': globalThis.pagereload,
+        'history.go': globalThis.history.go.bind(globalThis.history),
+        'requestLogin': globalThis.requestLogin,
+        'reLoad': globalThis.location.reload.bind(globalThis.location),
     }
 
     window.addEventListener('message', function (ev) {
-        // if (ev.origin !== location.origin) return;
+        if (ev.origin !== location.origin) return;
         if (!ev.data) return;
         if (!(apis_allowed[ev.data.api])) return;
         let ret;
@@ -791,9 +799,10 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
             return ev.source.postMessage({
                 'type': 'api_callback',
                 'result': null,
+                'error': true,
                 'why_result_is_null': String(error),
                 'callback_id': ev.data.id
-            }, location.origin);
+            }, ev.source.origin);
         }
         if (Promise.prototype.isPrototypeOf(ret)) {
             ret.then(function (data) {
@@ -802,7 +811,7 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
                     'async': 'true',
                     'result': data,
                     'callback_id': ev.data.id
-                }, location.origin);
+                }, ev.source.origin);
             })
             .catch(function (err) {
                 ev.source.postMessage({
@@ -811,9 +820,10 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
                     'error': true,
                     'result': err,
                     'callback_id': ev.data.id
-                }, location.origin);
+                }, ev.source.origin);
             })
             .catch(function (err) {
+                console.error('Failed to handle message', ev, ':', err);
                 ev.source.postMessage({
                     'type': 'api_callback',
                     'async': true,
@@ -821,7 +831,7 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
                     'error_type': 'unknown',
                     'result': null,
                     'callback_id': ev.data.id
-                }, location.origin);
+                }, ev.source.origin);
             })
             return;
         }
@@ -831,7 +841,7 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
                 'type': 'api_callback',
                 'result': ret,
                 'callback_id': ev.data.id
-            }, location.origin);
+            }, ev.source.origin);
         }
         catch (error) {
             if (ev.source)
@@ -840,7 +850,7 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el')
                 'result': null,
                 'why_result_is_null': String(error),
                 'callback_id': ev.data.id
-            }, location.origin);
+            }, ev.source.origin);
         }
     });
 

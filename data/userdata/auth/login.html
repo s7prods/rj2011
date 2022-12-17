@@ -85,26 +85,16 @@
             left: 10px;
         }
 
-        #main button.loading::before {
-            content: "";
-            display: inline-block;
-            width: 1em;
-            height: 1em;
-            box-sizing: border-box;
-            vertical-align: middle;
-            margin-right: 5px;
-            border: 2px solid transparent;
-            border-radius: 50%;
-            border-top-color: var(--color);
-            animation: spin linear 1s infinite;
-        }
-        @keyframes spin {
-            from {
-                transform: rotate(0deg); /* 直接用 rotate 属性兼容性不好 */
-            }
-            to {
-                transform: rotate(360deg);
-            }
+        
+    </style>
+    <style data-comment="Polyfill dialog">
+        dialog[open]:not(:modal) {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            margin: 0;
+            padding: 10px;
         }
     </style>
 </head>
@@ -127,8 +117,8 @@
             <br>
 
             <div class="btn-group primary">
-                <button type="submit" class="primary" id="next">下一步</button>
-                <button type="reset" onclick="parent.postMessage({api:'history.go',args:[-1]})">取消</button>
+                <button type="submit" class="btn primary" id="next">下一步</button>
+                <button type="reset" onclick="parent.postMessage({api:'history.go',args:[-1]},location.origin)">取消</button>
             </div>
         </form>
 
@@ -137,7 +127,7 @@
                 <legend>或选择一个用户...</legend>
                 <form id="userlist_choose">
                     <select style="box-sizing:border-box;width:100%" id="userlist_content"><option>正在加载</option></select>
-                    <button style="box-sizing:border-box;width:100%;margin-top:10px;" type="submit">确定</button>
+                    <button style="box-sizing:border-box;width:100%;margin-top:10px;padding:10px;" type="submit">确定</button>
                 </form>
             </fieldset>
         </div>
@@ -146,11 +136,27 @@
     <br>
 
     <fieldset>
-        <legend>常见问题</legend>
+        <legend><a href="javascript:" onclick="this.parentElement.parentElement.hidden=!0">[x]</a> 常见问题</legend>
         <div>
             <question-card>
                 <div class="q">如何登录？</div>
                 <div class="a">输入您的账号，然后按提示操作。</div>
+            </question-card>
+            <question-card>
+                <div class="q">我的账号是什么？</div>
+                <div class="a">我也不知道。或许可以试试你姓名首字母的缩写。</div>
+            </question-card>
+            <question-card>
+                <div class="q">为什么要登录？</div>
+                <div class="a">登录之后可以看更多文章。</div>
+            </question-card>
+            <question-card>
+                <div class="q">我必须要登录吗？</div>
+                <div class="a">不，不过登录之后可以看更多文章。</div>
+            </question-card>
+            <question-card>
+                <div class="q">我想登录，但我不知道我的账号是什么？</div>
+                <div class="a">请联系一下网站管理员。</div>
             </question-card>
         </div>
     </fieldset>
@@ -160,9 +166,10 @@
             return parent.postMessage({
                 api: 'showinfo',
                 args: [a, b, c]
-            })
+            }, location.origin)
         }
         const main = document.querySelector('#main');
+        let login_request_id = 1;
         main.addEventListener('input', function (ev) {
             if (ev.target.tagName.toLowerCase() !== 'input') return;
             if (ev.target.value) {
@@ -177,18 +184,14 @@
             enableformitem(main, false);
             next.classList.add('loading');
 
-            fetch('../users.json').then(v=>v.json())
-            .then(function (data) {
-                
-                showinfo('你莫猴，这个功能还没逮完', 'warn');
-                
-            })
-            .catch(function (err) {
-                enableformitem(main, true);
-                next.classList.remove('loading');
+            parent.postMessage({
+                api: 'requestLogin',
+                args: [{
+                    username: (main.querySelector('#username')||{}).value,
+                }],
+                id: ++login_request_id
+            }, location.origin);
 
-                showinfo(`数据加载失败: ${err}`, 'error')
-            });
         }
         userlist_choose.onsubmit = function (ev) {
             ev.preventDefault();
@@ -208,6 +211,27 @@
             }
         })
         .catch(e => { showinfo(`用户数据加载失败: ${e}`, 'error') });
+
+        window.addEventListener('message', async function (ev) {
+            if (ev.origin !== location.origin) return;
+            if (!ev.data || ev.data.type !== 'api_callback' || ev.data.callback_id !== login_request_id) return;
+
+
+            if (ev.data.error) {
+                enableformitem(main, true);
+                next.classList.remove('loading');
+                return;
+            }
+
+            if (ev.data.success) {
+                next.innerHTML = '登录成功';
+                next.classList.remove('loading');
+
+                return;
+            }
+
+
+        });
     }())</script>
     
 </body>

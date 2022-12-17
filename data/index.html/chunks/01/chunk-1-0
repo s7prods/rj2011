@@ -5,8 +5,9 @@
 </span>
 </nav>
 
-<div style="margin-top:40px">&nbsp;</div>
-</div>
+<!-- div.nav --></div>
+
+<div class="content">
 
 <div data-id=data-download-details></div>
 

@@ -9,6 +9,7 @@
     window.addEventListener('message', function (ev) {
         if (ev.origin !== location.origin) return;
         if (!ev.data || ev.data.api !== 'cors-helper') return;
+        if (!fn[ev.data.subapi]) return;
 
         ev.source.postMessage({
             api: 'cors-helper',
@@ -65,11 +66,11 @@
                     }
                     break;
                 case 'storageAPI.setItem':
-                    if (!ev.data.error) _instance = ev.data.result;
+                    // if (!ev.data.error) _instance = ev.data.result;
                     for (let i = registeredEventCallback.size; i;) {
                         --i;
 
-                        if (registeredEventCallback.get(i).type !== 'set') continue;
+                        if (registeredEventCallback.get(i).type !== 'setItem') continue;
                         if (registeredEventCallback.get(i).id !== ev.data.id) continue;
                         registeredEventCallback.get(i)[ev.data.error ? 'reject' : 'resolve'](ev.data.result);
                         registeredEventCallback.delete(i);

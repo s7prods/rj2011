@@ -28,18 +28,30 @@ a:any-link, a[href] {
     bottom: 0;
     width: 100%;
     height: 100%;
-    overflow: auto;
+    /* overflow: auto; */
     /* background: inherit; */
     background: var(--background);
 
     --background: white;
 }
 
+.wrapper > div, .wrapper > div > div {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
 
-#main {
+
+
+#main .container {
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    height: 100%;
+}
+#main .container > .content {
     padding: 10px;
-
-
+    overflow: auto;
 }
 
 #main .page-loading-progress {
@@ -70,7 +82,7 @@ a:any-link, a[href] {
     flex-direction: column;
 }
 #main nav {
-    position: fixed;
+    position: relative;
     top: 0;
     left: 0;
     width: calc(100% - (10px * 2));

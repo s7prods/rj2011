@@ -19,7 +19,28 @@
             "user.name": "$shc07",
             "user.auth.name": ["Delomy"],
             "user.profile.location": "users/[users]/delomy.json",
-            "user.groups": []
+            "user.groups": [21,101]
+        },
+        "60fe882c-49ce-4fba-b20a-fc5565288f62": {
+            "user.id": 1001,
+            "user.name": "Teacher",
+            "user.auth.name": ["Teacher"],
+            "user.profile.location": "users/[users]/teacher.json",
+            "user.groups": [102]
+        },
+        "13ca0f67-e451-4ef8-b3f9-0f7cf7dd764c": {
+            "user.id": 1002,
+            "user.name": "Student",
+            "user.auth.name": [],
+            "user.profile.location": "users/[users]/stu.json",
+            "user.groups": [101]
+        },
+        "75729ab1-b45c-4f63-b8e4-28538c2aa4be": {
+            "user.id": 1101,
+            "user.name": "[现代诗人] 杨杰凯",
+            "user.auth.name": ["YJK", "杨杰凯"],
+            "user.profile.location": "users/[users]/YJK.json",
+            "user.groups": [101]
         }
     },
     "groups": {

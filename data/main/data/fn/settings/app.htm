@@ -47,20 +47,20 @@
                     parent.postMessage({
                         'api': 'showinfo',
                         'args': ['设置已保存。\n部分设置可能需要刷新页面后生效']
-                    });
+                    }, location.origin);
                 }
                 catch (error) {
                     parent.postMessage({
                         'api': 'showinfo',
                         'args': ['无法保存设置: ' + error, 'error']
-                    });
+                    }, location.origin);
                 }
             }
             cancel.onclick = function () {
                 parent.postMessage({
                     'api': 'reload_content',
                     'args': []
-                });
+                }, location.origin);
             }
 
             nouse_GILP.checked = rj2011_data.settings.do_not_use_GILP;

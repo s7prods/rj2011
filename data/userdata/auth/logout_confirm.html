@@ -9,8 +9,8 @@
 <body>
 
     <h1>确认退出登录？</h1>
-    <button onclick="parent.postMessage({type:'redirect_hash',url:'#/account/logout/'})">确定</button>
-    <button onclick="parent.postMessage({api:'history.go',args:[-1]})">取消</button>
+    <button onclick="parent.postMessage({type:'redirect_hash',url:'#/account/logout/'},location.origin)">确定</button>
+    <button onclick="parent.postMessage({api:'history.go',args:[-1]},location.origin)">取消</button>
     
 </body>
 </html>

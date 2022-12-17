@@ -10,6 +10,8 @@
 }
 .btn-group.primary button {
     font-size: large;
+}
+.btn-group button {
     transition: 0.2s;
     border: 1px solid;
     color: var(--color);
@@ -22,21 +24,21 @@
     --backgroundColor: #f6f8fa;
     --borderColor: rgba(27,31,36,0.15);
 }
-.btn-group.primary button.primary {
+.btn-group button.primary {
     --color: #ffffff;
     --backgroundColor: #2da44e;
     --borderColor: rgba(27,31,36,0.15);
 }
-.btn-group.primary button:hover {
+.btn-group button:hover {
     --backgroundColor: #f3f4f6;
 }
-.btn-group.primary button.primary:hover {
+.btn-group button.primary:hover {
     --backgroundColor: #2c974b;
 }
-.btn-group.primary button:disabled {
+.btn-group button:disabled {
     opacity: 0.5;
 }
-/* .btn-group.primary button:disabled::after {
+/* .btn-group button:disabled::after {
     content: "";
     cursor: not-allowed;
     display: inline-block;
@@ -53,4 +55,27 @@
 }
 .btn-group button:nth-last-child(1) {
     margin-right: 0;
+}
+button.btn.loading::before {
+    content: "";
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    box-sizing: border-box;
+    vertical-align: middle;
+    margin-right: 5px;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    border-top-color: var(--color);
+    animation: button-spin-animation_f99f5364 linear 1s infinite;
+}
+@keyframes button-spin-animation_f99f5364 {
+    from {
+        transform: rotate(0deg);
+        /* 直接用 rotate 属性兼容性不好 */
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 }
