@@ -263,7 +263,7 @@
     if (rj2011_data.allowStatistics === false) return console.log('[Statistics] Didn\'t load stat script because the user disallowed');
 
     // Load Statistics script
-    fetch('data/main/data/EULA/_stat')
+    fetch('data/main/data/EULA/stat')
     .then(v => v.text())
     .then(async function (data) {
         let fun = new Function(data);
