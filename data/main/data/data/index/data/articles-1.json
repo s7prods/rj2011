@@ -1,15 +1,23 @@
 {
-    "top": { "items": [] },
-    "random": {
+    "top": {
         "items": [
             {
-                "title": "《观点·爱情》系列作品",
-                "author": "YJK 等",
+                "title": "《2011班史》",
+                "author": "2011",
                 "time": "2020~2022",
-                "des": "《观点·爱情》系列经过3年的沉淀，如今已成为2011不朽的经典。",
-                "href": "page/data/main/data/data/book/oal/",
-                "tags": ["2011","观点·爱情","YJK","现代作品","经典"]
+                "des": "《2011班史》",
+                "href": "page/data/main/data/data/book/class_history",
+                "tags": ["2011","班史"]
+            },
+            {
+                "title": "湘西拦门酒",
+                "author": "翠翠/2001",
+                "time": "2021",
+                "des": "湘西撩人的拦门酒，好香好纯好享受！<br>【LPY的作品】# 湘西拦门酒# 溶江中学# 初二2001班",
+                "href": "https://v.douyin.com/rjXWhFr/",
+                "tags": ["2001","翠翠","视频"]
             }
         ]
-    }
+    },
+    "random": { "items": [] }
 }

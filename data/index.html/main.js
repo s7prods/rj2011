@@ -20,6 +20,16 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el', 'custom-progr
         main.append(el);
     }
 
+    setTimeout(function () {
+        if (location.hostname !== '127.0.0.1') return;
+        const el = document.createElement('div');
+        el.setAttribute('style', 'position:fixed;left:10px;bottom:10px;'+
+        'border:1px solid;padding:5px;background:white;font-size:small;'+
+        'color:grey;pointer-events:none');
+        el.innerHTML = '开发中内容，请以实际上线为准';
+        (document.body || document.documentElement).append(el);
+    });
+
 
     function pageload() {
         let details = document.getElementById('loading_details');
@@ -241,6 +251,7 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el', 'custom-progr
                 'data/main/js/data_init.js': null,
                 'data/main/js/r-custom-elements.js': null,
                 'data/main/js/link-navi-helper.js': null,
+                '[statcode]': null,
             },
             'styles': {
                 'data/main/css/general.css': null,
@@ -402,6 +413,7 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el', 'custom-progr
                 const divBuffer = document.createElement('div');
                 async function exec(k, v, type) {
                     divBuffer.innerHTML = '';
+                    if (v === '[statcode]') return;
                     let content = content_scripts[k][v];
                     if (!content || !content.url) {
                         try {
@@ -447,6 +459,18 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el', 'custom-progr
             for (const style in content_scripts.styles) {
                 await exec('styles', style, 'link');
             }
+
+            if (rj2011_data.allowStatistics) try {
+                // 插入统计代码
+                if (!content_scripts['scripts']['[statcode]']) {
+                    const r = await fetch('data/main/data/EULA/stat');
+                    if (!r.ok) throw r;
+                    content_scripts['scripts']['[statcode]'] = await r.text();
+                }
+                const f = new text.contentWindow.Function(content_scripts['scripts']['[statcode]']);
+                await text.contentWindow.setTimeout(f);
+            } catch (Err) { console.warn('[Statistics] Failed to insert stat into content page:', Err) };
+
             // page_load_progress.value = max_value;
             return text;
         }

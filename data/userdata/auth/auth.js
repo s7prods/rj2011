@@ -32,6 +32,11 @@
             }
 
 
+            showinfo('你莫猴，这个功能还没逮完', 'warn');
+
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+
             return {
                 success: false,
                 response: 'More Information Needed',

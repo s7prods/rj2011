@@ -6,7 +6,7 @@
                 "title": "YJK - 人物档案",
                 "author": "YJK",
                 "time": "2022",
-                "des": "",
+                "des": "姓名杨杰凯<br>称号当代诗人、现代诗人、现代作家、大诗人等<br>代表作观点·爱情 (其一) 明天·青春·|语文奖| 论青春·回头 等<br>外貌特征黑<br>性格特征化",
                 "href": "page/data/main/data/data/profiles/YJK/",
                 "tags": ["2011","人物档案","YJK"]
             },
@@ -25,6 +25,30 @@
                 "des": "",
                 "href": "page/data/main/data/data/profiles/doublegreen/",
                 "tags": ["2011","人物档案","翠翠"]
+            },
+            {
+                "title": "观点·爱情 (其三)",
+                "author": "YJK",
+                "time": "2021",
+                "des": "今天有点不同，我成长了，体会到一丝希望就此熄灭。那该如何。<br>大家对我们“抱有希望”，“一年分”“一学期分”“一周分”······对!似乎没有说错， 我们执行了一月零六天的任务，在今天终于结束。在这些日子，我虽然被玩弄的很累...",
+                "href": "page/data/main/data/data/book/oal/oal-3.html",
+                "tags": ["2011","YJK","观点·爱情","现代作品"]
+            },
+            {
+                "title": "观点·爱情 (YJK终篇)",
+                "author": "YJK",
+                "time": "2022",
+                "des": "",
+                "href": "page/data/main/data/data/book/oal/oal-Yfinal.html",
+                "tags": ["2011","YJK","观点·爱情","现代作品"]
+            },
+            {
+                "title": "To: 杨杰凯",
+                "author": "YJK",
+                "time": "2022",
+                "des": "To：杨杰凯<br>为自己活一次！不必太过坚强与努力，尽力就好，最起码你拼搏了. 你的一生可能总是掩藏与平凡的土地中，如果你不获取氧分如何发芽。...",
+                "href": "page/data/main/data/data/article/YJK/ToYJK.html",
+                "tags": ["2011","YJK","现代作品","励志"]
             }
         ]
     }
