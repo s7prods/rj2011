@@ -460,7 +460,7 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el', 'custom-progr
                 await exec('styles', style, 'link');
             }
 
-            if (rj2011_data.allowStatistics) try {
+            if (rj2011_data.allowStatistics !== false) try {
                 // 插入统计代码
                 if (!content_scripts['scripts']['[statcode]']) {
                     const r = await fetch('data/main/data/EULA/stat');
