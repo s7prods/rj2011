@@ -153,7 +153,7 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el', 'custom-progr
             const ErrorIframeOriginViolation = Object.create({ toString() { return 'Origin Violation' } });
             const max_violation_count = 10;
             let violation_count = 0;
-            return function () {
+            return async function () {
                 if (!cont) return false;
                 const el = cont.querySelector('iframe.content');
                 if (!el) return false;

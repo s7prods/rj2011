@@ -24,8 +24,9 @@
             return Reflect.get(target, p, receiver);
         },
         set(target, p, newValue, receiver) {
+            const result = Reflect.set(target, p, newValue, receiver); // (2)
             store_data();
-            return Reflect.set(target, p, newValue, receiver); // (2)
+            return result;
         }
     });
     Object.defineProperty(globalThis, 'rj2011_data', {

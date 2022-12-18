@@ -41,8 +41,15 @@
                 <td>《用户协议》和《隐私政策》</td>
                 <td><button onclick="storageAPI.setItem('acceptedEULA.u','').then(()=>storageAPI.setItem('acceptedEULA.p','').then(()=>parent.postMessage({api:'reLoad'},'*')))">查看</button></td>
             </tr>
+
+            <tr>
+                <td>统计</td>
+                <td><label><input type="checkbox" id="allowStatistics" disabled> 允许统计</label></td>
+            </tr>
         </tbody>
     </table>
+
+    <script src="about.js" async></script>
 
 </body>
 </html>
