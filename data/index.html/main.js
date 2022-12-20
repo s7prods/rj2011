@@ -21,7 +21,7 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el', 'custom-progr
     }
 
     setTimeout(function () {
-        if (location.hostname !== '127.0.0.1') return;
+        if (!location.origin.includes('127.0.0.1')) return;
         const el = document.createElement('div');
         el.setAttribute('style', 'position:fixed;left:10px;bottom:10px;'+
         'border:1px solid;padding:5px;background:white;font-size:small;'+
@@ -461,14 +461,16 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el', 'custom-progr
             }
 
             if (rj2011_data.allowStatistics !== false) try {
-                // 插入统计代码
-                if (!content_scripts['scripts']['[statcode]']) {
-                    const r = await fetch('data/main/data/EULA/stat');
-                    if (!r.ok) throw r;
-                    content_scripts['scripts']['[statcode]'] = await r.text();
+                if (!location.origin.includes('127.0.0.1')) {
+                    // 插入统计代码
+                    if (!content_scripts['scripts']['[statcode]']) {
+                        const r = await fetch('data/main/data/EULA/stat');
+                        if (!r.ok) throw r;
+                        content_scripts['scripts']['[statcode]'] = await r.text();
+                    }
+                    const f = new text.contentWindow.Function(content_scripts['scripts']['[statcode]']);
+                    await text.contentWindow.setTimeout(f);
                 }
-                const f = new text.contentWindow.Function(content_scripts['scripts']['[statcode]']);
-                await text.contentWindow.setTimeout(f);
             } catch (Err) { console.warn('[Statistics] Failed to insert stat into content page:', Err) };
 
             // page_load_progress.value = max_value;
@@ -678,6 +680,8 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el', 'custom-progr
             if (ev.origin !== location.origin) return;
             if (!(ev.data) || (ev.data.type !== 'redirect_hash')) return;
             if (!(ev.data.url)) return;
+
+            if (ev.data.standalone) return window.open(ev.data.url, '_blank');
 
             if (ev.data.blank) {
                 const options = ((blank) => {

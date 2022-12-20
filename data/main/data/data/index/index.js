@@ -79,7 +79,7 @@
         }, location.origin)
     }
 
-    function createCard(t, d, m, a, l, g, x = null) {
+    function createCard(t, d, m, a, l, g, s, x = null) {
         let card = document.createElement('content-card');
         card.innerHTML = `
             <div class=title></div>
@@ -127,6 +127,7 @@
                 "type": "redirect_hash",
                 "url": l,
                 "blank": (_ === 'open_in_blank' ? 'blank' : (_ === 'open_in_new_window' ? 'newWindow' : false)),
+                "standalone": s ? true : false
             }, location.origin);
         };
         card.onkeydown = function (ev) {
@@ -159,11 +160,11 @@
 
     function parse_content_data(data) {
         for (const i of data.top.items) {
-            contents_top.append(createCard('<b style="color:red">[置顶] </b>' + i.title, i.des, i.time, i.author, i.href, i.tags))
+            contents_top.append(createCard('<b style="color:red">[置顶] </b>' + i.title, i.des, i.time, i.author, i.href, i.tags, i.standalone))
         }
         const randarr = arrshuffle(data.random.items, false)
         for (const i of randarr) {
-            contents_it.append(createCard(i.title, i.des, i.time, i.author, i.href, i.tags))
+            contents_it.append(createCard(i.title, i.des, i.time, i.author, i.href, i.tags, i.standalone))
         }
     }
 

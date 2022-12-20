@@ -1,6 +1,5 @@
 {
-    "top": {
-        "items": [
+    "top": { "items": [
             {
                 "title": "《2011班史》",
                 "author": "2011",
@@ -17,7 +16,15 @@
                 "href": "https://v.douyin.com/rjXWhFr/",
                 "tags": ["2001","翠翠","视频"]
             }
-        ]
-    },
-    "random": { "items": [] }
+    ] },
+    "random": { "items": [
+        {
+            "title": "快乐小鸡",
+            "author": "",
+            "time": "",
+            "des": "",
+            "href": "data/main/data/app/happy-chicken",
+            "standalone": "true"
+        }
+    ] }
 }

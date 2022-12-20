@@ -30,6 +30,11 @@
         },
         {
             "type": "js",
+            "url": "data/index.html/prefetch.js",
+            "async": true
+        },
+        {
+            "type": "js",
             "url": "data/js/progress_2.js",
             "async": true,
             "required": true,

@@ -34,7 +34,7 @@
         overflow: auto;
         display: flex; flex-direction: column;
     }
-    .${cct}, .${cct} *, .cb06ab0e192b * {
+    .${cbd}, .${cct}, .${cct} *, .cb06ab0e192b * {
         pointer-events: auto;
     }
     @media screen and (max-width: 500px) {
@@ -65,13 +65,19 @@
     .${cct} > .data-block > .item > .content:not(.open) {
         display: none;
     }
+    .${cct} > .data-block > .item > .content.loading::before {
+        content: "正在加载...";
+        color: gray;
+    }
     .${cct} > .data-block > .item > .content.failed::before {
         content: "加载失败: " attr(data-error);
         color: red;
     }
-    .${cct} > .data-block > .item > .content.loading::before {
-        content: "正在加载...";
-        color: gray;
+    .${cct} > .data-block > .item > label {
+        display: block;
+    }
+    .${cct} > .data-block > .item > label:nth-last-child(1) {
+        margin-bottom: 50px;
     }
     .${cct} > .fullscreen-button {
         cursor: pointer;
@@ -185,6 +191,7 @@
 
             return true;
         }
+        if (content.classList.contains('loading')) return;
         content.classList.add('open');
         content.classList.remove('failed');
         content.classList.add('loading');
@@ -196,8 +203,6 @@
             let el2 = el.querySelector('label');
             if (el2) {
                 el2 = el2.cloneNode(true);
-                el2.style.display = 'block';
-                el2.style.paddingBottom = '20px';
                 el.append(el2);
                 el.$BindedCheckField = el2;
             }
@@ -205,6 +210,7 @@
         .catch(function (err) {
             content.innerHTML = '';
             content.classList.add('failed');
+            content.classList.remove('loading');
             content.setAttribute('data-error', err);
         });
     }, { capture: true });
@@ -260,7 +266,10 @@
 }(globalThis, document))
 .then(function startStatistics(result) {
     if (result !== 'allowed') return false;
-    if (rj2011_data.allowStatistics === false) return console.log('[Statistics] Didn\'t load stat script because the user disallowed');
+    if (rj2011_data.allowStatistics === false)
+        return console.log('[Statistics] Didn\'t load stat script because the user disallowed');
+    if (location.origin.includes('127.0.0.1'))
+        return console.log('[Statistics] Didn\'t load stat script because the site is running on a local server');
 
     // Load Statistics script
     fetch('data/main/data/EULA/stat')
@@ -271,7 +280,8 @@
     })
     .then(v => console.log('[Statistics] Statistics script loaded successfully with result', v))
     .catch(function (err) {
-        console.error('[Statistics] Failed to load statistics script:', err);
+        console.warn('[Statistics] Failed to load statistics script:', err);
     })
 
-});
+})
+

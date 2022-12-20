@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8" />
+    <title>快乐小鸡</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="快乐小鸡">
+    <script>
+        function getRandom(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+    </script>
+    <style>
+        body{
+            background: #11A7FD;
+        }
+        .chicken,.egg{
+            position: fixed;
+            transform: translate(-50%, -50%);
+        }
+        .chicken{
+            left: 50%;
+            top: 50%;
+            z-index: 2;
+        }
+        #count{
+            position: fixed;
+            right: 10px;
+            top: 10px;
+            background-color: white;
+            z-index: 3;
+            width: auto;
+            height: auto;
+            font-size: 6em;
+            text-align: right;
+        }
+
+        .prefetch {
+            display: none;
+            visibility: hidden;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <img src="./Chicken.png" alt="prefetch:#chicken.chicken" class="prefetch">
+    <img src="./Egg.png" alt="prefetch:.egg" class="prefetch">
+
+    <main>
+        <span id=count>0</span>
+        <img id=chicken src="./Chicken.png" alt=Chicken class=chicken />
+    </main>
+
+    <script src="plugin/vip.js" async data-description="氪金系统"></script>
+
+    <script>
+        (function () {
+            var mspoint = { x: 0, y: 0 };
+            document.documentElement.addEventListener('mousemove', function(event) {
+                event = event ? event : window.event;
+                mspoint.x = event.pageX;
+                mspoint.y = event.pageY;
+            }); // 记录鼠标位置
+            window.onmousedown = function(event) {
+                event = event ? event : window.event;
+                event.preventDefault();
+                if (++count.innerHTML > 600) {
+                    let es = document.querySelectorAll('main img.egg');
+                    let esl = es.length;
+                    for (let i = 0; i < esl; ++i) es[i].remove();
+                    count.innerHTML = 0;
+                    return;
+                }
+                img = document.createElement('img');
+                img.src = 'Egg.png';
+                img.alt = 'Egg';
+                img.classList.add('egg');
+                img.style.left = chicken.style.left = mspoint.x + 'px';
+                img.style.top  = chicken.style.top  = mspoint.y + 'px';
+                document.body.querySelector('main').appendChild(img);
+            } // 随便点就能下蛋
+            window.oncontextmenu = function() { return false; }; // 屏蔽右键菜单
+            window.onkeyup = function() {
+                mspoint.x = getRandom(0, document.documentElement.clientWidth );
+                mspoint.y = getRandom(0, document.documentElement.clientHeight);
+                onmousedown({ preventDefault: () => { } });
+            } // 按键下蛋
+        })()
+    </script>
+</body>
+
+</html>
