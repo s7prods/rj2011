@@ -1,0 +1,40 @@
+name: 问题报告
+description: 报告 Bug
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢报告此问题！
+  - type: textarea
+    id: bug
+    attributes:
+      label: 发生了什么?
+      description: 这个bug是如何发生的？发生时您做了什么？（添加几张截图会很有帮助。）
+      placeholder: 告诉我们发生了什么！
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: 浏览器信息
+      description: 您使用的是什么浏览器？
+  - type: input
+    id: user_agent
+    attributes:
+      label: User Agent
+      description: User Agent 信息 (此项由系统自动填写，看不懂请不要更改)
+      placeholder: 看不懂的请不要更改！
+  - type: textarea
+    id: logs
+    attributes:
+      label: 浏览器控制台报错信息
+      description: 如果您使用的是PC端浏览器，在提交此bug前，请按F12，切换到 Console 然后复制（或截图）所有内容（特别是红色的）。这会对bug的修复提供非常大的帮助！！（如没有可不填）
+      placeholder: 如没有可不填
+  - type: textarea
+    id: attached
+    attributes:
+      label: 附加信息
+      description: 更多关于此bug的信息...
+
