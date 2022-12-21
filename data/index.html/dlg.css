@@ -1,0 +1,30 @@
+.modal-center-dialog-container {
+    position: fixed;
+    left: 0; right: 0; top: 0; bottom: 0;
+    z-index: 20002;
+    display: none;
+}
+
+.modal-center-dialog {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+.modal-center-dialog-container.open {
+    display: block;
+}
+
+.modal-center-dialog-container.open::before {
+    content: "";
+    position: fixed;
+    left: 0; right: 0; top: 0; bottom: 0;
+    background: black;
+    opacity: 0.1;
+    cursor: not-allowed;
+}
+

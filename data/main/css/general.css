@@ -2,10 +2,6 @@
     cursor: not-allowed !important;
     user-select: none !important;
 }
-*:disabled {
-    /* pointer-events: none !important; */
-    touch-action: none !important;
-}
 
 
 a, button {

@@ -7,6 +7,10 @@
         {
             "type": "css",
             "url": "data/main/css/my-button-group.css"
+        },
+        {
+            "type": "css",
+            "url": "data/index.html/dlg.css"
         }
     ],
     "scripts": [
@@ -57,13 +61,13 @@
         },
         {
             "type": "js",
-            "url": "data/js/winmenu-helper-custom.js",
+            "url": "data/js/winmenu-helper-custom.min.js",
             "async": true,
             "required": true
         },
         {
             "type": "js",
-            "url": "data/main/js/r-custom-elements.js",
+            "url": "data/main/js/r-custom-elements.min.js",
             "async": true,
             "required": true
         },
@@ -75,7 +79,7 @@
         },
         {
             "type": "js",
-            "url": "data/userdata/user.js",
+            "url": "data/userdata/user.min.js",
             "async": true,
             "required": true
         },
@@ -83,13 +87,27 @@
             "type": "js",
             "url": "data/userdata/auth/auth.js",
             "async": true,
-            "required": true
+            "required": false
+        },
+        {
+            "type": "js",
+            "url": "data/main/js/feedback.js",
+            "async": true,
+            "required": false
         },
         {
             "type": "js",
             "url": "data/index.html/main.js",
             "async": true,
-            "required": true
+            "required": true,
+            "condition": "location.origin.includes('127.0.0.1')"
+        },
+        {
+            "type": "js",
+            "url": "data/index.html/main.min.js",
+            "async": true,
+            "required": true,
+            "condition": "!location.origin.includes('127.0.0.1')"
         }
     ]
 }

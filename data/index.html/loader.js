@@ -7,7 +7,10 @@
     let loaderData = null;
     let currentScriptLoadProgress = 0;
 
-    fetch('data/index.html/loader.json')
+    let loader = 'data/index.html/loader.min.json';
+    if (location.origin.includes('127.0.0.1')) loader = 'data/index.html/loader.json';
+
+    fetch(loader)
     .then(v => v.json())
     .then(function (data) {
         loaderData = data;

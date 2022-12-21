@@ -24,7 +24,7 @@
         background: black; opacity: 0.5;
     }
     .${cct} {
-        transition: 0.3s;
+        transition: all 0.3s;
         left: 50%; top: 50%; transform: translate(-50%, -50%);
         background: white;
         border: 1px outset gray;
@@ -85,13 +85,13 @@
         left: 10px; top: 10px;
         width: 16px; height: 16px;
         background-color: white;
-        background-image: url(data/index.html/fullscreen-expand.svg);
+        background-image: url(data/resource/img/fullscreen-expand.svg);
         background-repeat: no-repeat;
         background-size: 16px;
         border: none;
     }
     .${cct}.fullscreen>.fullscreen-button {
-        background-image: url(data/index.html/fullscreen-shrink.svg);
+        background-image: url(data/resource/img/fullscreen-shrink.svg);
     }
     .${cct} [hidden] {
         display: none !important;
@@ -107,7 +107,7 @@
 
     function clipKeyboard(ev) {
         if (!/tab/i.test(ev.key)) return;
-        for (let i of ev.path) {
+        for (let i of ev.composedPath()) {
             if (i === root) return;
         }
         ev.preventDefault();

@@ -1,4 +1,10 @@
 [
-    "data/index.html/fullscreen-expand.svg",
-    "data/index.html/fullscreen-shrink.svg"
+    "data/resource/img/fullscreen-expand.svg",
+    "data/resource/img/fullscreen-shrink.svg",
+    "data/resource/img/close.svg",
+    "data/resource/img/more.svg",
+    "data/resource/img/print.svg",
+    "data/resource/img/reload.svg",
+    "data/resource/img/return.svg",
+    "data/resource/img/edit.svg"
 ]

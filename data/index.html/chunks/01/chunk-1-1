@@ -2,6 +2,21 @@
 <div>Copyright 2011(c)2020-2021. All rights reserved.</div>
 <div><a href="#/about/website">About 2011 WebSite</a></div>
 </footer>
-<button id="webpage-fullscreen-button" title="网页全屏" aria-label="Full screen in the webpage"></button>
+
 
 </div>
+
+
+<div id="plugins-button-container">
+    <button id="plugins-button-button" title="更多..." aria-label="更多功能" style="--tooltip-position: 170%;"></button>
+
+    <div class="plugins-container">
+        <div><button onclick="history.back()" title="返回" aria-label="返回上一页" style="--tooltip-position: 250%; background-image: url(data/resource/img/return.svg)"></button></div>
+        <div><button onclick="pagereload()" title="刷新" aria-label="重新加载当前内容" style="--tooltip-position: 250%; background-image: url(data/resource/img/reload.svg)"></button></div>
+        <div><button id="edit_page" title="编辑" aria-label="编辑此页面" style="--tooltip-position: 250%; background-image: url(data/resource/img/edit.svg)"></button></div>
+        <div><button onclick="openFeedbackUI()" title="反馈" aria-label="反馈问题或报告bug" style="--tooltip-position: 250%; background-image: url(data/resource/img/feedback.svg)"></button></div>
+        <div><button onclick="callPrint()" title="打印" aria-label="打印此页面" style="--tooltip-position: 250%; background-image: url(data/resource/img/print.svg)"></button></div>
+        <div><button style="--tooltip-position: 340%;" id="webpage-fullscreen-button" title="网页全屏" aria-label="Full screen in the webpage"></button></div>
+    </div>
+</div>
+

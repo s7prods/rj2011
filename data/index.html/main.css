@@ -185,11 +185,25 @@ a:any-link, a[href] {
     border: none;
 }
 
-#main #webpage-fullscreen-button {
+#main #plugins-button-container > #plugins-button-button {
     position: fixed;
     right: 20px;
     bottom: 20px;
-    z-index: 100001;
+    z-index: 1001;
+    width: 60px;
+    height: 60px;
+    background-size: 40px;
+
+    background-image: url(../resource/img/more.svg);
+}
+#main #plugins-button-container.open > #plugins-button-button {
+    background-image: url(../resource/img/close.svg);
+    background-size: 25px;
+}
+#main #plugins-button-container .plugins-container > * {
+    margin-top: 10px;
+}
+#main #plugins-button-container button {
     display: block;
     width: 40px;
     height: 40px;
@@ -198,18 +212,59 @@ a:any-link, a[href] {
     transition: background-color .1s;
     box-shadow: 0 0 10px #ccc;
     cursor: pointer;
-
     background-color: white;
-    background-image: url(fullscreen-expand.svg);
     background-repeat: no-repeat;
-    background-position: 3px;
+    background-position: center;
     background-size: 32px;
 }
-#main #webpage-fullscreen-button:hover {
+#main #plugins-button-container button:hover {
     background-color: #F0f0f0;
 }
+#main #plugins-button-container .plugins-container {
+    display: none;
+    position: fixed;
+    right: 70px;
+    bottom: 90px;
+    flex-direction: column;
+    width: 0;
+    overflow: visible;
+}
+#main #plugins-button-container.open .plugins-container {
+    display: flex;
+}
+#main #plugins-button-container button::after {
+    content: attr(title);
+    color: transparent;
+    background-color: transparent;
+    padding: 10px;
+    border-radius: 10px;
+    pointer-events: none;
+    transition: background-color 250ms linear;
+
+    position: fixed;
+    top: -100%;
+    width: 0;
+    height: 0;
+}
+#main #plugins-button-container button:focus::after,
+#main #plugins-button-container button:hover::after {
+    position: relative;
+    right: var(--tooltip-position);
+    top: 0;
+    width: fit-content;
+    height: auto;
+    word-break: keep-all;
+    color: white;
+    background-color: black;
+    display: block;
+}
+
+
+#main #webpage-fullscreen-button {
+    background-image: url(../resource/img/fullscreen-expand.svg);
+}
 #main #webpage-fullscreen-button.expanded {
-    background-image: url(fullscreen-shrink.svg);
+    background-image: url(../resource/img/fullscreen-shrink.svg);
 }
 
 #main main.expanded {
@@ -239,6 +294,28 @@ a:any-link, a[href] {
 }
 #main [data-id="data-download-details"] .loading-progress-text::after {
     content: "%";
+}
+
+
+
+/* print view */
+@media print {
+    * {
+        display: none !important;
+        visibility: hidden !important;
+        width: 0 !important;
+        height: 0 !important;
+    }
+    html, body {
+        display: revert !important;
+        visibility: revert !important;
+        width: revert !important;
+        height: revert !important;
+    }
+    body::after {
+        content: "请按[Ctrl+P]或使用[打印]功能 而不是浏览器自带打印 进行打印，否则打印内容可能残缺不全";
+        font-size: 5rem;
+    }
 }
 
 

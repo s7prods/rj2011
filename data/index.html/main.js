@@ -23,11 +23,37 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el', 'custom-progr
     setTimeout(function () {
         if (!location.origin.includes('127.0.0.1')) return;
         const el = document.createElement('div');
-        el.setAttribute('style', 'position:fixed;left:10px;bottom:10px;'+
-        'border:1px solid;padding:5px;background:white;font-size:small;'+
-        'color:grey;pointer-events:none');
+        el.id = 'tip-in_developing';
         el.innerHTML = '开发中内容，请以实际上线为准';
+        addCSS(`#tip-in_developing {`+
+            `position: fixed;`+
+            `left: 10px;`+
+            `bottom: 10px;`+
+            `border: 1px solid;`+
+            `padding: 5px;`+
+            `background: white;`+
+            `font-size: small;`+
+            `color: grey;`+
+            `pointer-events: none;`+
+            `z-index: 1001;`+
+        `}`, el);
         (document.body || document.documentElement).append(el);
+    });
+
+
+    setTimeout(function () {
+        const conErr = console.error;
+        console.error = function ConsoleErrorHandler() {
+            const retValue = conErr.apply(console, arguments);
+
+            let str = '';
+            for (let i = 0; i < arguments.length; ++i) {
+                str += arguments[i] + ' ';
+            }
+            showinfo(`错误: ${str}\r\n(查看控制台以获取更多信息)`, 'error');
+
+            return retValue;
+        }
     });
 
 
@@ -78,14 +104,10 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el', 'custom-progr
                 await data_init()
                 prog.value = 50
 
-                if ((rj2011_data.settings || {}).do_not_use_GILP) {
-                    addCSS(`.GenshinImpactLoadingProgressWrapperClass{display:none!important}`);
+                try {
+                    await Initialize();                    
                 }
-
-                (main.querySelector('#webpage-fullscreen-button') || {}).onclick = function () {
-                    main.querySelectorAll('#webpage-fullscreen-button,main')
-                        .forEach(el => el.classList.toggle('expanded'));
-                }
+                catch (err) { console.error('Failed to initialize:', err) };
 
                 load_content({
                     callback: function () {
@@ -97,6 +119,31 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el', 'custom-progr
             .catch(e => common_error_handler(e));
         };
         loadMainHTMLStructure();
+
+
+
+        async function Initialize() {
+            if ((rj2011_data.settings || {}).do_not_use_GILP) {
+                addCSS(`.GenshinImpactLoadingProgressWrapperClass{display:none!important}`);
+            }
+
+
+            main.querySelector('#plugins-button-container').addEventListener('click', function (ev) {
+                this.classList.toggle('open');
+            }, { capture: true });
+            // main.querySelector('#plugins-button-button').addEventListener('click', function () {
+            //     this.parentElement.classList.toggle('open');
+            // }, { capture: false });
+
+
+
+            (main.querySelector('#webpage-fullscreen-button') || {}).onclick = function () {
+                main.querySelectorAll('#webpage-fullscreen-button,main')
+                    .forEach(el => el.classList.toggle('expanded'));
+            };
+
+        }
+
 
 
 
@@ -206,9 +253,7 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el', 'custom-progr
                         if (++violation_count > max_violation_count) {
                             console.error(`[FATAL] Access violation for `, violation_count,
                                 `\nDocument load is blocked.`);
-                            cont.innerHTML = `<h1 style="color:red">致命错误</h1>
-                                <h3>Access violation</h3>
-                                <div>请尝试重新加载页面</div>`;
+                            cont.innerHTML = `<h1 style="color:red">致命错误</h1><h3>Access violation</h3><div>请尝试重新加载页面</div>`;
                             return;
                         }
                         
@@ -247,9 +292,9 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el', 'custom-progr
                 'data/main/js/cors-helper.js': null,
                 'data/js/dependencies.js': null,
                 'data/js/util.js': null,
-                'data/js/winmenu-helper-custom.js': null,
+                'data/js/winmenu-helper-custom.min.js': null,
                 'data/main/js/data_init.js': null,
-                'data/main/js/r-custom-elements.js': null,
+                'data/main/js/r-custom-elements.min.js': null,
                 'data/main/js/link-navi-helper.js': null,
                 '[statcode]': null,
             },
@@ -427,7 +472,7 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el', 'custom-progr
                             content = content_scripts[k][v].url;
                         }
                         catch (error) {
-                            console.warn('Unable to load ', script, 'because', error);
+                            console.error('Unable to load', v, 'because', error);
                             return CONTINUE;
                         }
                     } else content = content.url;
@@ -461,7 +506,7 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el', 'custom-progr
             }
 
             if (rj2011_data.allowStatistics !== false) try {
-                if (!location.origin.includes('127.0.0.1')) {
+                if (!location.origin.includes('127.0.0.1') && rj2011_data['acceptedEULA.u']) {
                     // 插入统计代码
                     if (!content_scripts['scripts']['[statcode]']) {
                         const r = await fetch('data/main/data/EULA/stat');
@@ -881,6 +926,31 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el', 'custom-progr
             }, ev.source.origin);
         }
     });
+
+
+
+
+    // print
+    window.addEventListener('keydown', function (ev) {
+        if (!(ev.key.toUpperCase() === 'P' && ev.ctrlKey)) return;
+
+        try {
+            callPrint();
+            ev.preventDefault();
+            return false;
+        }
+        catch (err) {
+            console.error('[ERROR] Failed to call print in sub document:', err, '\nCalling native API instead');
+        }
+
+
+    });
+    globalThis.callPrint = function () {
+        const w = main.querySelector('main iframe').contentWindow;
+        return w.setTimeout(async function () { return new Promise(function (resolve) { resolve(w.print()) }) });
+    }
+
+
 
 
 

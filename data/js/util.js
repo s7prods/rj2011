@@ -14,13 +14,17 @@ function applyStyleToElement(el, style) {
     }
 }
 
-function showinfo(text, level = 'info', time = 5000) {
+function showinfo(text, level = 'info', time = 5000, animation_time = 500, id = null) {
     let el = document.createElement('div');
     el.classList.add('cb06ab0e192b');
 
     el.setAttribute('data-level', level);
 
-    el.innerText = text;
+    el.unionId = String(getRandom(100000, 999999));
+    if (!id) id = 'cb06ab0e192b:' + el.unionId;
+    el.id = id;
+
+    el.append(document.createTextNode(text));
     let closebtn = document.createElement('button');
     closebtn.innerHTML = 'x';
     closebtn.classList.add('x');
@@ -28,28 +32,27 @@ function showinfo(text, level = 'info', time = 5000) {
     el.append(closebtn);
 
     (document.body || document.documentElement).append(el);
+    
+    let bh = el.clientHeight;
+    addCSS(`
+    @keyframes cb06ab0e192b_${el.unionId}-out {
+        from { top: 10px }
+        to { top: ${-bh}px }
+    }
+    @keyframes cb06ab0e192b_${el.unionId}-in {
+        from { top: ${-bh}px }
+        to { top: 10px }
+    }`, el);
 
-    var bh = el.clientHeight;
-    var bt = -bh;
-    var _i1 = setInterval(function () {
-        el.style.top = (bt += 1) + 'px';
-        if (bt >= 10) {
-            el.style.top = 10;
-            clearInterval(_i1);
-        }
-    }, 10);
+    el.style.top = '10px';
+    el.style.animation = `cb06ab0e192b_${el.unionId}-in ${animation_time}ms linear 1`;
     
     if (!time) return el;
     
     setTimeout(function () {
-        bt = 10;
-        var _i2 = setInterval(function () {
-            el.style.top = (bt -= 1) + 'px';
-            if (bt < -bh) {
-                clearInterval(_i2);
-                el.remove();
-            }
-        }, 10);
+        el.style.animation = `cb06ab0e192b_${el.unionId}-out ${animation_time}ms linear 1`;
+        el.style.top = `${-bh-100}px`;
+        setTimeout(el.remove.bind(el), 2 * animation_time);
     }, time);
 
     return el;
