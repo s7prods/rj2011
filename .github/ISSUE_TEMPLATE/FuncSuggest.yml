@@ -1,0 +1,13 @@
+name: 功能建议
+description: 建议添加功能...
+title: "[功能建议]: "
+labels: []
+body:
+  - type: textarea
+    id: text
+    attributes:
+      label: 描述
+      description: 描述
+    validations:
+      required: true
+
