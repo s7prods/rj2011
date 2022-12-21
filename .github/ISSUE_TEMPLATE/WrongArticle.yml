@@ -1,0 +1,31 @@
+name: 文章纠错
+description: 某篇文章有一些错误...
+title: "[文章纠错]: "
+labels: ["article", "wrong"]
+body:
+  - type: input
+    id: url
+    attributes:
+      label: 文章链接
+      description: 需要纠错的文章链接：（如果通过右下角“反馈”进入此页面，则无需更改此栏）
+    validations:
+      required: true
+  - type: textarea
+    id: bug
+    attributes:
+      label: 这篇文章有什么错误？
+      description: 这篇文章有什么错误？
+    validations:
+      required: true
+  - type: textarea
+    id: advice
+    attributes:
+      label: 修改意见
+      description: （可选）您觉得这篇文章应该如何修改？
+      placeholder: （可选）
+  - type: textarea
+    id: attached
+    attributes:
+      label: 附加信息
+      description: 更多信息...
+
