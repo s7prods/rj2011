@@ -7,6 +7,18 @@ body:
     attributes:
       value: |
         感谢报告此问题！
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: 先决条件
+      description: 在提交此【Bug报告】前，请检查：
+      options:
+        - label: 这是一个bug
+          required: true
+        - label: 这不是文章内容错误
+          required: true
+        - label: 这不是拼写错误(即俗称的“打错字”)
+          required: true
   - type: textarea
     id: bug
     attributes:
@@ -15,6 +27,11 @@ body:
       placeholder: 告诉我们发生了什么！
     validations:
       required: true
+  - type: input
+    id: url
+    attributes:
+      label: Bug URL
+      description: 出现此问题的页面链接：
   - type: input
     id: browser
     attributes:

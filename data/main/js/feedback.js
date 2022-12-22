@@ -31,7 +31,7 @@ dependencies.on('util.js').then(function () {
     </div>
 
     <br>
-    <a href="javascript:void(0)" data-t=close>关闭</a>
+    <a href="javascript:" data-t=close>关闭</a>
     `;
 
 
@@ -49,6 +49,7 @@ dependencies.on('util.js').then(function () {
     el.querySelector('[data-t=bug]').onclick = function () {
         const u = new URL('https://github.com/s7prods/rj2011/issues/new?assignees=&labels=bug%2Ctriage&template=BugReport.yml&title=%5BBug%5D%3A+');
         u.searchParams.append('user_agent', navigator.userAgent);
+        u.searchParams.append('url', location.href);
         window.open(u, '_blank');
         root.classList.remove('open')
     }
@@ -59,7 +60,9 @@ dependencies.on('util.js').then(function () {
             const ifr = document.querySelector('#main main iframe');
             u.searchParams.append('url', ifr.contentWindow.location.href);
         }
-        catch {}
+        catch {
+            u.searchParams.append('url', location.href);
+        }
         window.open(u, '_blank');
         root.classList.remove('open')
     }

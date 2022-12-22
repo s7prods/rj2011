@@ -161,22 +161,24 @@
     content.addEventListener('input', function (ev) {
         if (ev.target.tagName.toLowerCase() !== 'input' || ev.target.type !== 'checkbox') return;
         let el = (ev.target.parentElement.parentElement.querySelector('.content') || {});
-        if (el.innerHTML === '' && !ev.target.$accepted) {
-            ev.preventDefault();
-            ev.target.checked = false;
-            showinfo('需要先查看内容。', 'error');
-        } else {
-            let el2 = ev.target.parentElement.parentElement;
-            el2.querySelectorAll('input[type=checkbox]').forEach(el3 => {
-                el3.checked = ev.target.checked;
-            });
+        if (!el) return;
+        // if (el.innerHTML === '' && !ev.target.$accepted) {
+        //     ev.preventDefault();
+        //     ev.target.checked = false;
+        //     showinfo('需要先查看内容。', 'error');
+        // }
+        
+        let el2 = ev.target.parentElement.parentElement;
+        el2.querySelectorAll('input[type=checkbox]').forEach(el3 => {
+            el3.checked = ev.target.checked;
+        });
 
-            let _ = true;
-            content.querySelectorAll('input[type=checkbox]').forEach(el => {
-                if (!el.checked) _ = false;
-            });
-            content.querySelector('button[data-id=o]').disabled = !_;
-        }
+        let _ = true;
+        content.querySelectorAll('input[type=checkbox]').forEach(el => {
+            if (!el.checked) _ = false;
+        });
+        content.querySelector('button[data-id=o]').disabled = !_;
+    
     }, { capture: true });
     content.addEventListener('click', function (ev) {
         if (ev.target.tagName.toLowerCase() !== 'a' || !ev.target.classList.contains('btn')) return;
