@@ -5,17 +5,23 @@
     display: none;
 }
 
-.modal-center-dialog {
+.modal-center-dialog, .center-dialog {
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+    z-index: 20002;
     background-color: white;
     padding: 10px;
     border: 1px solid #ccc;
 }
 
-.modal-center-dialog-container.open {
+.center-dialog {
+    position: fixed;
+    display: none;
+}
+
+.modal-center-dialog-container.open, .center-dialog.open {
     display: block;
 }
 

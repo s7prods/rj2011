@@ -16,7 +16,7 @@
     }
     .${cbd}, .${cct} {
         position: fixed;
-        z-index: 1073741823;
+        z-index: 1073741823 !important;
     }
     .${cbd} {
         left: 0; right: 0; top: 0; bottom: 0;
@@ -43,7 +43,7 @@
         }
     }
     .${cct}.fullscreen {
-        left: 0; right: 0; top: 0; bottom: 0;
+        left: 0!important; right: 0!important; top: 0!important; bottom: 0!important;
         transform: revert !important;
     }
     .${cct} > .data-block {
@@ -243,6 +243,12 @@
             default: ;
         }
         el.checked = el.$accepted = true;
+
+        import('../../../js/BindMove.js')
+        .then(function (data) {
+            data.BindMove(content.querySelector('.title'), content, { isTranslatedToCenter: true });
+        })
+        .catch(function () { });
     })();
 
 

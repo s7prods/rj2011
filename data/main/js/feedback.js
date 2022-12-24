@@ -8,6 +8,7 @@ dependencies.on('util.js').then(function () {
 
     const el = document.createElement('div');
     el.classList.add('modal-center-dialog');
+    el.style.width = 'max-content';
     root.append(el);
 
     el.innerHTML = `
@@ -72,6 +73,15 @@ dependencies.on('util.js').then(function () {
         window.open(u, '_blank');
         root.classList.remove('open')
     }
+
+    import('../../js/BindMove.js')
+    .then(function (data) {
+        data.BindMove(el.querySelector('h1'), el, {
+            isTranslatedToCenter: true,
+            isFixed: true
+        });
+    })
+    .catch(() => {});
 
     
 
