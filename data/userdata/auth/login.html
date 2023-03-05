@@ -188,6 +188,7 @@
                 api: 'requestLogin',
                 args: [{
                     username: (main.querySelector('#username')||{}).value,
+                    password: (main.querySelector('#password')||{}).value,
                 }],
                 id: ++login_request_id
             }, location.origin);
@@ -195,7 +196,7 @@
         }
         userlist_choose.onsubmit = function (ev) {
             ev.preventDefault();
-            if (main.getAttribute('disabled')) return !showinfo('此时无法处理此请求。', 'error');
+            if (main.querySelector('[disabled]')) return !showinfo('此时无法处理此请求。', 'error');
             enableformitem(this, false);
             if (username.value = userlist_content.value) username.parentElement.classList.add('has-value');
             setTimeout(f => enableformitem(f, true), 2000, this);
@@ -223,13 +224,48 @@
                 return;
             }
 
-            if (ev.data.success) {
-                next.innerHTML = '登录成功';
+            if (ev.data.result && ev.data.result.success !== undefined) {
+                if (ev.data.result.success) {
+                    next.innerHTML = '登录成功';
+                    next.classList.remove('loading');
+                    return;
+                }
+                enableformitem(main, true);
                 next.classList.remove('loading');
 
+                switch (ev.data.result.response) {
+                    case 'More Information Needed': {
+                        
+                        break;
+                    }
+
+                    case 'Password Required': {
+                        main.querySelector('[data-category="login-by-password"]').style.display = '';
+                        main.querySelector('#password').required = true;
+                        username.disabled = true;
+                        main.querySelector('button[type=reset]').innerHTML = '重置';
+                        main.querySelector('button[type=reset]').onclick = function () { parent.postMessage({api:'reload_content'}, '*') };
+                        break;
+                    }
+
+                    case 'Account Not Found': {
+
+                        break;
+                    }
+                
+                    default: return internal_error(ev.data.result);
+                }
                 return;
             }
 
+
+            function internal_error (err) {
+                showinfo('内部错误: '+err, 'error');
+                enableformitem(main, true);
+                next.classList.remove('loading');
+                console.error(err);
+            }
+            internal_error(ev);
 
         });
     }())</script>

@@ -1,9 +1,6 @@
 {
     "user.nickname": "[root]",
-    "user.auth.password": {
-        "encryption": "sha256",
-        "value": "-"
-    },
+    "user.auth": {},
     "user.tokens": {
         "common-user-token": "--"
     },

@@ -99,15 +99,7 @@
             "type": "js",
             "url": "data/index.html/main.js",
             "async": true,
-            "required": true,
-            "condition": "location.origin.includes('127.0.0.1')"
-        },
-        {
-            "type": "js",
-            "url": "data/index.html/main.min.js",
-            "async": true,
-            "required": true,
-            "condition": "!location.origin.includes('127.0.0.1')"
+            "required": true
         }
     ]
 }

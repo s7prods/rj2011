@@ -56,6 +56,13 @@ dependencies.on('util.js', 'data_init.js', 'wm_helper', 'r-cu-el', 'custom-progr
         }
     });
 
+    setTimeout(() => {
+        const obj = showTip(`该网站已搬迁至 <code>https://rj2011.pages.dev/</code>。<br><div style="color:gray;text-align:center">点击任意处以前往新网站</div>`, true);
+        obj.onclose = () => location.href = 'https://rj2011.pages.dev/';
+        obj.el().style.zIndex = 1073741824;
+        addCSS(`* { pointer-events: auto !important; }`, obj.el());
+    });
+
 
     function pageload() {
         let details = document.getElementById('loading_details');

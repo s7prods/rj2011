@@ -1,10 +1,7 @@
 {
-    "user.nickname": "Delomy",
+    "user.nickname": "[Teacher]",
     "user.auth": {
-        "password": {
-            "encryption": "sha256",
-            "value": "-"
-        }
+        "question": { "list": "users/[auth]/q/teacher.json" }
     },
     "user.tokens": {
         "common-user-token": "--"

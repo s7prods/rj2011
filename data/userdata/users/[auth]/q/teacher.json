@@ -1,0 +1,27 @@
+{
+  "tip": "回答几个问题，以验证您的身份。",
+  "questions": [
+    {
+      "title": "您就职的学校是什么？",
+      "type": "input",
+      "answer": "",
+      "answer_validate": { "minLength": 4, "maxLength": 4 }
+    },
+    {
+      "id": "subject",
+      "title": "您的科目？",
+      "type": "select",
+      "options": ["语文", "数学", "英语", "政治", "历史", "地理", "生物", "物理", "化学"],
+      "answer": null
+    },
+    {
+      "title": "您的姓名？",
+      "type": "input",
+      "answer-if": "switch (subject.value) { case '语文':if(this.value==='钟姗')return!0;case '数学':if(this.value==='龙鹏玉')return!0;case '英语':if(this.value==='田世林')return!0;case '政治':if(this.value==='彭青丽')return!0;case '历史':if(this.value==='吴慧娟')return!0;case '生物':if(this.value==='张烨'||this.value==='向红群')return!0;case '地理':if(this.value==='阳锦慧')return!0;case '物理':if(this.value==='左敏'||this.value==='王江妮')return!0;case '化学':if(this.value==='肖勤')return!0;default:return!1}"
+    }
+  ],
+  "pass": {
+    "minOK": 3
+  },
+  "password": ""
+}
